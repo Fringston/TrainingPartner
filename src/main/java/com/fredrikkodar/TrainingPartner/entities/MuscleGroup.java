@@ -1,4 +1,4 @@
-package com.fredrikkodar.TrainingPartner.models;
+package com.fredrikkodar.TrainingPartner.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -17,8 +17,7 @@ public class MuscleGroup {
     private String name;
 
     //En muskelgrupp kan användas i flera övningar, därför har den en en-till-många-relation med ExerciseEntity
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "muscle_group", referencedColumnName = "id")
+    @OneToMany(mappedBy = "muscleGroup", cascade = CascadeType.ALL)
     List<Exercise> exercises = new ArrayList<>();
 
     public MuscleGroup(String name) {this.name = name;}

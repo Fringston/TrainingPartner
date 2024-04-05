@@ -1,4 +1,4 @@
-package com.fredrikkodar.TrainingPartner.models;
+package com.fredrikkodar.TrainingPartner.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -12,6 +12,10 @@ public class Exercise {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long exerciseId;
     private String name;
+
+    @ManyToOne
+    @JoinColumn(name = "muscle_group_id")
+    private MuscleGroup muscleGroup;
 
     public Exercise(String name) {
         this.name = name;

@@ -1,8 +1,8 @@
 package com.fredrikkodar.TrainingPartner.kafka;
 
-import com.fredrikkodar.TrainingPartner.models.Exercise;
-import com.fredrikkodar.TrainingPartner.models.MuscleGroup;
-import com.fredrikkodar.TrainingPartner.models.User;
+import com.fredrikkodar.TrainingPartner.entities.Exercise;
+import com.fredrikkodar.TrainingPartner.entities.MuscleGroup;
+import com.fredrikkodar.TrainingPartner.entities.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;

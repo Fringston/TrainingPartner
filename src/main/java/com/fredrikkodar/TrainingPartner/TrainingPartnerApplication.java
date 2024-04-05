@@ -1,7 +1,7 @@
 package com.fredrikkodar.TrainingPartner;
 
-import com.fredrikkodar.TrainingPartner.models.Role;
-import com.fredrikkodar.TrainingPartner.models.User;
+import com.fredrikkodar.TrainingPartner.entities.Role;
+import com.fredrikkodar.TrainingPartner.entities.User;
 import com.fredrikkodar.TrainingPartner.repository.RoleRepository;
 import com.fredrikkodar.TrainingPartner.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;

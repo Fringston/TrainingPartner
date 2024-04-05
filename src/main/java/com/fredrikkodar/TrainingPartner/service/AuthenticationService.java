@@ -39,7 +39,7 @@ public class AuthenticationService {
         Set<Role> authorities = new HashSet<>();
         authorities.add(userRole);
 
-        return userRepository.save(new User(1L, username, encodedPassword, authorities));
+        return userRepository.save(new User(0L, username, encodedPassword, authorities));
     }
 
     public LoginResponseDTO loginUser(String username, String password) {

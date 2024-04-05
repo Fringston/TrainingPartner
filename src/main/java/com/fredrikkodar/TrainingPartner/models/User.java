@@ -35,6 +35,9 @@ public class User implements UserDetails {
     )
     private Set<Role> authorities;
 
+    public User(String username, String encodedPassword, Set<Role> authorities) {
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {return this.authorities;}
 

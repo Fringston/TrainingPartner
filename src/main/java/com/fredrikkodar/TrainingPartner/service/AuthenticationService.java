@@ -3,7 +3,6 @@ package com.fredrikkodar.TrainingPartner.service;
 import com.fredrikkodar.TrainingPartner.dto.LoginResponseDTO;
 import com.fredrikkodar.TrainingPartner.entities.Role;
 import com.fredrikkodar.TrainingPartner.entities.User;
-import com.fredrikkodar.TrainingPartner.kafka.KafkaProducer;
 import com.fredrikkodar.TrainingPartner.repository.RoleRepository;
 import com.fredrikkodar.TrainingPartner.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -32,11 +31,9 @@ public class AuthenticationService {
     private AuthenticationManager authenticationManager;
     @Autowired
     private TokenService tokenService;
-    @Autowired
-    private KafkaProducer kafkaProducer;
 
-    // Gammal metod för att registrera en ny användare
-    /*public User registerUser(String username, String password) {
+
+   public User registerUser(String username, String password) {
         String encodedPassword = passwordEncoder.encode(password);
         Role userRole = roleRepository.findByAuthority("USER").get();
 
@@ -44,26 +41,8 @@ public class AuthenticationService {
         authorities.add(userRole);
 
         return userRepository.save(new User(0L, username, encodedPassword, authorities));
-    }*/
-
-    // Ny metod för att registrera en ny användare och skicka ett Kafka-meddelande
-    public User registerUser(String username, String password) {
-        String encodedPassword = passwordEncoder.encode(password);
-        Role userRole = roleRepository.findByAuthority("USER").get();
-
-        Set<Role> authorities = new HashSet<>();
-        authorities.add(userRole);
-
-        User newUser = userRepository.save(new User(0L, username, encodedPassword, authorities));
-
-        // Skicka ett Kafka-meddelande med den nya användaren
-        kafkaProducer.sendUserMessage(newUser);
-
-        return newUser;
     }
 
-    // Gammal metod för att logga in en användare
-    /*
     public LoginResponseDTO loginUser(String username, String password) {
         try {
             Authentication auth = authenticationManager.authenticate(
@@ -73,23 +52,18 @@ public class AuthenticationService {
         } catch (AuthenticationException e) {
             return new LoginResponseDTO(null, "");
         }
-    }*/
+    }
 
-    //Ny metod för att logga in en användare och skicka ett Kafka-meddelande
+    /*
+    // Ny LoginResponseDTO som endast skickar med jwt och skippar hela user-objektet
     public LoginResponseDTO loginUser(String username, String password) {
         try {
             Authentication auth = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(username, password));
             String token = tokenService.generateJwt(auth);
-
-            User loggedInUser = userRepository.findByUsername(username).get();
-
-            // Skicka ett Kafka-meddelande med den inloggade användaren
-            kafkaProducer.sendUserMessage(loggedInUser);
-
-            return new LoginResponseDTO(loggedInUser, token);
+            return new LoginResponseDTO(token);
         } catch (AuthenticationException e) {
-            return new LoginResponseDTO(null, "");
+            return new LoginResponseDTO("");
         }
-    }
+    }*/
 }

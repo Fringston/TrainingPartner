@@ -5,6 +5,8 @@ import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "muscle_groups")
@@ -16,9 +18,8 @@ public class MuscleGroup {
     private Long muscleGroupId;
     private String name;
 
-    //En muskelgrupp kan användas i flera övningar, därför har den en en-till-många-relation med ExerciseEntity
-    @OneToMany(mappedBy = "muscleGroup", cascade = CascadeType.ALL)
-    List<Exercise> exercises = new ArrayList<>();
+    @ManyToMany(mappedBy = "muscleGroups")
+    private Set<Exercise> exercises;
 
     public MuscleGroup(String name) {this.name = name;}
 
@@ -29,6 +30,7 @@ public class MuscleGroup {
         return "MuscleGroup{" +
                 "id=" + muscleGroupId +
                 ", name='" + name + '\'' +
+                ", exercises=" + (exercises != null ? exercises.stream().map(Exercise::getName).collect(Collectors.joining(", ")) : "None") +
                 '}';
     }
 }

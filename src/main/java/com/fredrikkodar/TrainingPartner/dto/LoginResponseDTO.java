@@ -13,4 +13,8 @@ public class LoginResponseDTO {
         this.user = user;
         this.jwt = jwt;
     }
+
+    public LoginResponseDTO(String jwt) {
+        this.jwt = jwt;
+    }
 }

@@ -3,6 +3,9 @@ package com.fredrikkodar.TrainingPartner.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @Entity
 @Table(name = "exercises")
 @Data
@@ -13,9 +16,13 @@ public class Exercise {
     private Long exerciseId;
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "muscle_group_id")
-    private MuscleGroup muscleGroup;
+    @ManyToMany
+    @JoinTable(
+            name = "exercise_muscle_group_junction",
+            joinColumns = @JoinColumn(name = "exercise_id"),
+            inverseJoinColumns = @JoinColumn(name = "muscle_group_id")
+    )
+    private Set<MuscleGroup> muscleGroups;
 
     public Exercise(String name) {
         this.name = name;
@@ -27,6 +34,7 @@ public class Exercise {
         return "Exercise{" +
                 "id=" + exerciseId +
                 ", name='" + name + '\'' +
+                ", muscleGroups=" + (muscleGroups != null ? muscleGroups.stream().map(MuscleGroup::getName).collect(Collectors.joining(", ")) : "None") +
                 '}';
     }
 }

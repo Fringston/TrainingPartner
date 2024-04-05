@@ -3,6 +3,7 @@ package com.fredrikkodar.TrainingPartner.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -26,8 +27,12 @@ public class Exercise {
 
     public Exercise(String name) {
         this.name = name;
+        this.muscleGroups = new HashSet<>();
     }
-    public Exercise() {}
+
+    public Exercise() {
+        this.muscleGroups = new HashSet<>();
+    }
 
     @Override
     public String toString() {

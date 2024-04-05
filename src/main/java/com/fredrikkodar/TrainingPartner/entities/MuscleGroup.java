@@ -18,7 +18,7 @@ public class MuscleGroup {
     private Long muscleGroupId;
     private String name;
 
-    @ManyToMany(mappedBy = "muscleGroups")
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "muscleGroups")
     private Set<Exercise> exercises;
 
     public MuscleGroup(String name) {this.name = name;}

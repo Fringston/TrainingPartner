@@ -34,8 +34,16 @@ public class User implements UserDetails {
     )
     private Set<Role> authorities;
 
-    public User(String username, String encodedPassword, Set<Role> authorities) {
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<UserMaxWeights> maxWeights;
+
+    public User(Long id, String username, String encodedPassword, Set<Role> authorities) {
+        this.userId = id;
+        this.username = username;
+        this.password = encodedPassword;
+        this.authorities = authorities;
     }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {return this.authorities;}

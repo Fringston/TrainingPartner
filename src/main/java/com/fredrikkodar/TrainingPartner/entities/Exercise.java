@@ -25,6 +25,9 @@ public class Exercise {
     )
     private Set<MuscleGroup> muscleGroups;
 
+    @OneToMany(mappedBy = "exercise", cascade = CascadeType.ALL)
+    private Set<UserMaxWeights> maxWeights;
+
     public Exercise(String name) {
         this.name = name;
         this.muscleGroups = new HashSet<>();

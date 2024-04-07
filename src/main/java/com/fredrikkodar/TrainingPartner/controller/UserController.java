@@ -4,6 +4,7 @@ import com.fredrikkodar.TrainingPartner.dto.MaxWeightDTO;
 import com.fredrikkodar.TrainingPartner.entities.UserMaxWeight;
 import com.fredrikkodar.TrainingPartner.exceptions.ExerciseNotFoundException;
 import com.fredrikkodar.TrainingPartner.exceptions.MaxWeightAlreadyExistsException;
+import com.fredrikkodar.TrainingPartner.exceptions.MaxWeightNotFoundException;
 import com.fredrikkodar.TrainingPartner.exceptions.UserNotFoundException;
 import com.fredrikkodar.TrainingPartner.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +22,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/")
-    public String helloUserController() {
-        return "User access level";
-    }
-
     @GetMapping("/maxweight/{userId}/{exerciseId}")
     public ResponseEntity<MaxWeightDTO> getMaxWeight(@PathVariable Long userId, @PathVariable Long exerciseId) {
         try {
@@ -38,8 +34,12 @@ public class UserController {
 
     @GetMapping("/maxweights")
     public ResponseEntity<List<MaxWeightDTO>> getAllMaxWeights() {
-        List<MaxWeightDTO> dtos = userService.getAllMaxWeights();
-        return new ResponseEntity<>(dtos, HttpStatus.OK);
+        try {
+            List<MaxWeightDTO> dtos = userService.getAllMaxWeights();
+            return new ResponseEntity<>(dtos, HttpStatus.OK);
+        } catch (MaxWeightNotFoundException e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
     }
 
     @PostMapping("/maxweight")

@@ -6,6 +6,7 @@ import com.fredrikkodar.TrainingPartner.entities.User;
 import com.fredrikkodar.TrainingPartner.entities.UserMaxWeight;
 import com.fredrikkodar.TrainingPartner.exceptions.ExerciseNotFoundException;
 import com.fredrikkodar.TrainingPartner.exceptions.MaxWeightAlreadyExistsException;
+import com.fredrikkodar.TrainingPartner.exceptions.MaxWeightNotFoundException;
 import com.fredrikkodar.TrainingPartner.repository.ExerciseRepository;
 import com.fredrikkodar.TrainingPartner.repository.UserMaxWeightRepository;
 import com.fredrikkodar.TrainingPartner.repository.UserRepository;
@@ -52,6 +53,8 @@ public class UserService implements UserDetailsService {
         List<MaxWeightDTO> allUserWeightsDTO = new ArrayList<>();
         for (UserMaxWeight userMaxWeight : allUserWeights) {
             allUserWeightsDTO.add(convertToDTO(userMaxWeight));
+        } if (allUserWeightsDTO.isEmpty()) {
+            throw new MaxWeightNotFoundException( "No max weights found");
         }
         return allUserWeightsDTO;
     }

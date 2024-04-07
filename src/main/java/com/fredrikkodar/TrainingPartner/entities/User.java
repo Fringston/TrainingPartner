@@ -35,7 +35,7 @@ public class User implements UserDetails {
     private Set<Role> authorities;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<UserMaxWeights> maxWeights;
+    private Set<UserMaxWeight> maxWeights;
 
     public User(Long id, String username, String encodedPassword, Set<Role> authorities) {
         this.userId = id;

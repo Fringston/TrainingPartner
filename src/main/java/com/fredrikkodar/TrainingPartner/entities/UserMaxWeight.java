@@ -3,12 +3,10 @@ package com.fredrikkodar.TrainingPartner.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.Optional;
-
 @Entity
 @Table(name = "user_exercise_max")
 @Data
-public class UserMaxWeights {
+public class UserMaxWeight {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,9 +23,9 @@ public class UserMaxWeights {
     @Column(nullable = false)
     private int maxWeight;
 
-    public UserMaxWeights() {}
+    public UserMaxWeight() {}
 
-    public UserMaxWeights(User user, Exercise exercise, int maxWeight) {
+    public UserMaxWeight(User user, Exercise exercise, int maxWeight) {
         this.user = user;
         this.exercise = exercise;
         this.maxWeight = maxWeight;

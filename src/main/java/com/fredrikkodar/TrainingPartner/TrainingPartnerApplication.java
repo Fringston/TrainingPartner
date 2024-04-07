@@ -63,8 +63,8 @@ public class TrainingPartnerApplication {
 	CommandLineRunner initExercises(MuscleGroupRepository muscleGroupRepository, ExerciseRepository exerciseRepository) {
 
 		return args -> {
-			if (!exerciseRepository.existsByName("Bicep curls")) {
-				Exercise exercise = new Exercise("Bicep curls");
+			if (!exerciseRepository.existsByName("Bicep curl")) {
+				Exercise exercise = new Exercise("Bicep curl");
 				muscleGroupRepository.findByName("Arms")
 						.ifPresentOrElse(
 								muscleGroup -> exercise.getMuscleGroups().add(muscleGroup),
@@ -72,8 +72,8 @@ public class TrainingPartnerApplication {
 						);
 				exerciseRepository.save(exercise);
 			}
-			if (!exerciseRepository.existsByName("Triceps extensions")) {
-				Exercise exercise = new Exercise("Triceps extensions");
+			if (!exerciseRepository.existsByName("Triceps extension")) {
+				Exercise exercise = new Exercise("Triceps extension");
 				muscleGroupRepository.findByName("Arms")
 						.ifPresentOrElse(
 								muscleGroup -> exercise.getMuscleGroups().add(muscleGroup),
@@ -99,8 +99,8 @@ public class TrainingPartnerApplication {
 						);
 				exerciseRepository.save(exercise);
 			}
-			if (!exerciseRepository.existsByName("Pull-ups")) {
-				Exercise exercise = new Exercise("Pull-ups");
+			if (!exerciseRepository.existsByName("Pull-up")) {
+				Exercise exercise = new Exercise("Pull-up");
 				muscleGroupRepository.findByName("Upper back")
 						.ifPresentOrElse(
 								muscleGroup -> exercise.getMuscleGroups().add(muscleGroup),
@@ -117,8 +117,8 @@ public class TrainingPartnerApplication {
 						);
 				exerciseRepository.save(exercise);
 			}
-			if (!exerciseRepository.existsByName("Hip thrusts")) {
-				Exercise exercise = new Exercise("Hip thrusts");
+			if (!exerciseRepository.existsByName("Hip thrust")) {
+				Exercise exercise = new Exercise("Hip thrust");
 				muscleGroupRepository.findByName("Glutes")
 						.ifPresentOrElse(
 								muscleGroup -> exercise.getMuscleGroups().add(muscleGroup),
@@ -126,8 +126,8 @@ public class TrainingPartnerApplication {
 						);
 				exerciseRepository.save(exercise);
 			}
-			if (!exerciseRepository.existsByName("Back squats")) {
-				Exercise exercise = new Exercise("Back squats");
+			if (!exerciseRepository.existsByName("Back squat")) {
+				Exercise exercise = new Exercise("Back squat");
 				muscleGroupRepository.findByName("Legs")
 						.ifPresentOrElse(
 								muscleGroup -> exercise.getMuscleGroups().add(muscleGroup),
@@ -135,8 +135,8 @@ public class TrainingPartnerApplication {
 						);
 				exerciseRepository.save(exercise);
 			}
-			if (!exerciseRepository.existsByName("Front squats")) {
-				Exercise exercise = new Exercise("Front squats");
+			if (!exerciseRepository.existsByName("Front squat")) {
+				Exercise exercise = new Exercise("Front squat");
 				muscleGroupRepository.findByName("Legs")
 						.ifPresentOrElse(
 								muscleGroup -> exercise.getMuscleGroups().add(muscleGroup),
@@ -144,8 +144,8 @@ public class TrainingPartnerApplication {
 						);
 				exerciseRepository.save(exercise);
 			}
-			if (!exerciseRepository.existsByName("Lunges")) {
-				Exercise exercise = new Exercise("Lunges");
+			if (!exerciseRepository.existsByName("Lunge")) {
+				Exercise exercise = new Exercise("Lunge");
 				muscleGroupRepository.findByName("Legs")
 						.ifPresentOrElse(
 								muscleGroup -> exercise.getMuscleGroups().add(muscleGroup),
@@ -153,8 +153,8 @@ public class TrainingPartnerApplication {
 						);
 				exerciseRepository.save(exercise);
 			}
-			if (!exerciseRepository.existsByName("Sit ups")) {
-				Exercise exercise = new Exercise("Sit ups");
+			if (!exerciseRepository.existsByName("Sit up")) {
+				Exercise exercise = new Exercise("Sit up");
 				muscleGroupRepository.findByName("Abs")
 						.ifPresentOrElse(
 								muscleGroup -> exercise.getMuscleGroups().add(muscleGroup),

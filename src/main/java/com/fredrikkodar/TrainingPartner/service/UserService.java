@@ -1,10 +1,11 @@
 package com.fredrikkodar.TrainingPartner.service;
 
+import com.fredrikkodar.TrainingPartner.dto.MaxWeightDTO;
 import com.fredrikkodar.TrainingPartner.entities.Exercise;
 import com.fredrikkodar.TrainingPartner.entities.User;
-import com.fredrikkodar.TrainingPartner.entities.UserMaxWeights;
+import com.fredrikkodar.TrainingPartner.entities.UserMaxWeight;
 import com.fredrikkodar.TrainingPartner.repository.ExerciseRepository;
-import com.fredrikkodar.TrainingPartner.repository.UserMaxWeightsRepository;
+import com.fredrikkodar.TrainingPartner.repository.UserMaxWeightRepository;
 import com.fredrikkodar.TrainingPartner.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,7 +14,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -23,7 +25,7 @@ public class UserService implements UserDetailsService {
     @Autowired
     private ExerciseRepository exerciseRepository;
     @Autowired
-    private UserMaxWeightsRepository userMaxWeightsRepository;
+    private UserMaxWeightRepository userMaxWeightRepository;
     @Autowired
     private PasswordEncoder encoder;
 
@@ -36,24 +38,60 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found."));
     }
 
-    public UserMaxWeights getMaxWeight(Long userId, Long exerciseId) {
+    /*public UserMaxWeight getMaxWeight(Long userId, Long exerciseId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        return userMaxWeightsRepository.findByUser_UserIdAndExercise_ExerciseId(userId, exerciseId)
+        return userMaxWeightRepository.findByUser_UserIdAndExercise_ExerciseId(userId, exerciseId)
                 .orElseThrow(() -> new RuntimeException("Max weight not found"));
     }
 
-    public UserMaxWeights setMaxWeight(Long userId, Long exerciseId, int maxWeight) {
+    public List<UserMaxWeight> getAllMaxWeights() {
+        List<UserMaxWeight> allUserWeights = userMaxWeightRepository.findAll();
+        for (UserMaxWeight userMaxWeight : allUserWeights) {
+            if (userMaxWeight == null) {
+                System.out.println("No max weights found");
+            }
+            System.out.println(userMaxWeight);
+        }
+        return userMaxWeightRepository.findAll();
+    }*/
+
+    public MaxWeightDTO getMaxWeight(Long userId, Long exerciseId) {
+        UserMaxWeight userMaxWeight = userMaxWeightRepository.findByUser_UserIdAndExercise_ExerciseId(userId, exerciseId)
+                .orElseThrow(() -> new RuntimeException("Max weight not found"));
+        return convertToDTO(userMaxWeight);
+    }
+
+    public List<MaxWeightDTO> getAllMaxWeights() {
+        List<UserMaxWeight> allUserWeights = userMaxWeightRepository.findAll();
+        List<MaxWeightDTO> allUserWeightsDTO = new ArrayList<>();
+        for (UserMaxWeight userMaxWeight : allUserWeights) {
+            allUserWeightsDTO.add(convertToDTO(userMaxWeight));
+        }
+        return allUserWeightsDTO;
+    }
+
+    public UserMaxWeight setMaxWeight(Long userId, Long exerciseId, int maxWeight) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         Exercise exercise = exerciseRepository.findById(exerciseId)
                 .orElseThrow(() -> new RuntimeException("Exercise not found"));
 
-        UserMaxWeights userMaxWeights = new UserMaxWeights();
-        userMaxWeights.setUser(user);
-        userMaxWeights.setExercise(exercise);
-        userMaxWeights.setMaxWeight(maxWeight);
+        UserMaxWeight userMaxWeight = new UserMaxWeight();
+        userMaxWeight.setUser(user);
+        userMaxWeight.setExercise(exercise);
+        userMaxWeight.setMaxWeight(maxWeight);
 
-        return userMaxWeightsRepository.save(userMaxWeights);
+        return userMaxWeightRepository.save(userMaxWeight);
+    }
+
+    public MaxWeightDTO convertToDTO(UserMaxWeight userMaxWeight) {
+        MaxWeightDTO dto = new MaxWeightDTO();
+        dto.setUserId(userMaxWeight.getUser().getUserId());
+        dto.setExerciseId(userMaxWeight.getExercise().getExerciseId());
+        dto.setMaxWeight(userMaxWeight.getMaxWeight());
+        dto.setUsername(userMaxWeight.getUser().getUsername());
+        dto.setExerciseName(userMaxWeight.getExercise().getName());
+        return dto;
     }
 }

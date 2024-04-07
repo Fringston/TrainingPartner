@@ -19,6 +19,10 @@ public class UserController {
         return "User access level";
     }
 
+    @GetMapping("/maxweight/{userId}/{exerciseId}")
+    public UserMaxWeights getMaxWeight(@PathVariable Long userId, @PathVariable Long exerciseId) {
+        return userService.getMaxWeight(userId, exerciseId);
+    }
     @PostMapping("/maxweight")
     public UserMaxWeights setMaxWeight(@RequestBody MaxWeightRequestDTO request) {
         return userService.setMaxWeight(request.getUserId(), request.getExerciseId(), request.getMaxWeight());

@@ -36,6 +36,13 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found."));
     }
 
+    public UserMaxWeights getMaxWeight(Long userId, Long exerciseId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        return userMaxWeightsRepository.findByUser_UserIdAndExercise_ExerciseId(userId, exerciseId)
+                .orElseThrow(() -> new RuntimeException("Max weight not found"));
+    }
+
     public UserMaxWeights setMaxWeight(Long userId, Long exerciseId, int maxWeight) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));

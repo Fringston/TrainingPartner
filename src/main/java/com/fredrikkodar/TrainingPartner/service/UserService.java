@@ -4,6 +4,8 @@ import com.fredrikkodar.TrainingPartner.dto.MaxWeightDTO;
 import com.fredrikkodar.TrainingPartner.entities.Exercise;
 import com.fredrikkodar.TrainingPartner.entities.User;
 import com.fredrikkodar.TrainingPartner.entities.UserMaxWeight;
+import com.fredrikkodar.TrainingPartner.exceptions.ExerciseNotFoundException;
+import com.fredrikkodar.TrainingPartner.exceptions.MaxWeightAlreadyExistsException;
 import com.fredrikkodar.TrainingPartner.repository.ExerciseRepository;
 import com.fredrikkodar.TrainingPartner.repository.UserMaxWeightRepository;
 import com.fredrikkodar.TrainingPartner.repository.UserRepository;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -38,24 +41,6 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found."));
     }
 
-    /*public UserMaxWeight getMaxWeight(Long userId, Long exerciseId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        return userMaxWeightRepository.findByUser_UserIdAndExercise_ExerciseId(userId, exerciseId)
-                .orElseThrow(() -> new RuntimeException("Max weight not found"));
-    }
-
-    public List<UserMaxWeight> getAllMaxWeights() {
-        List<UserMaxWeight> allUserWeights = userMaxWeightRepository.findAll();
-        for (UserMaxWeight userMaxWeight : allUserWeights) {
-            if (userMaxWeight == null) {
-                System.out.println("No max weights found");
-            }
-            System.out.println(userMaxWeight);
-        }
-        return userMaxWeightRepository.findAll();
-    }*/
-
     public MaxWeightDTO getMaxWeight(Long userId, Long exerciseId) {
         UserMaxWeight userMaxWeight = userMaxWeightRepository.findByUser_UserIdAndExercise_ExerciseId(userId, exerciseId)
                 .orElseThrow(() -> new RuntimeException("Max weight not found"));
@@ -73,10 +58,13 @@ public class UserService implements UserDetailsService {
 
     public UserMaxWeight setMaxWeight(Long userId, Long exerciseId, int maxWeight) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         Exercise exercise = exerciseRepository.findById(exerciseId)
-                .orElseThrow(() -> new RuntimeException("Exercise not found"));
-
+                .orElseThrow(() -> new ExerciseNotFoundException("Exercise not found"));
+        Optional<UserMaxWeight> userMaxWeightCheck = userMaxWeightRepository.findByUser_UserIdAndExercise_ExerciseId(userId, exerciseId);
+        if (userMaxWeightCheck.isPresent()) {
+            throw new MaxWeightAlreadyExistsException("Max weight already exists");
+        }
         UserMaxWeight userMaxWeight = new UserMaxWeight();
         userMaxWeight.setUser(user);
         userMaxWeight.setExercise(exercise);

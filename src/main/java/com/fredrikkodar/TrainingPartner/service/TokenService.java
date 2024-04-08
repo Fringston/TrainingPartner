@@ -1,5 +1,6 @@
 package com.fredrikkodar.TrainingPartner.service;
 
+import com.fredrikkodar.TrainingPartner.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -28,10 +29,13 @@ public class TokenService {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(""));
 
+        User user = (User) auth.getPrincipal();
+
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .subject("self")
                 .issuedAt(now)
                 .subject(auth.getName())
+                .claim("userId", user.getUserId())
                 .claim("roles", scope)
                 .build();
         return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();

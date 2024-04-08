@@ -1,12 +1,14 @@
 package com.fredrikkodar.TrainingPartner.controller;
 
 import com.fredrikkodar.TrainingPartner.dto.MaxWeightDTO;
+import com.fredrikkodar.TrainingPartner.dto.PasswordChangeDTO;
 import com.fredrikkodar.TrainingPartner.entities.UserMaxWeight;
 import com.fredrikkodar.TrainingPartner.exceptions.*;
 import com.fredrikkodar.TrainingPartner.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +20,18 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @PatchMapping("/password")
+    public ResponseEntity<Void> changePassword(@RequestBody PasswordChangeDTO request) {
+        try {
+            userService.changePassword(request.getUserId(), request.getOldPassword(), request.getNewPassword());
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (UnauthorizedException e) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 
     @GetMapping("/maxweight/{userId}/{exerciseId}")
     public ResponseEntity<MaxWeightDTO> getMaxWeight(@PathVariable Long userId, @PathVariable Long exerciseId) {

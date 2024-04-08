@@ -24,6 +24,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -44,6 +46,28 @@ public class UserService implements UserDetailsService {
 
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found."));
+    }
+
+    public void changePassword(Long userId, String oldPassword, String newPassword) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Long currentUserId = (Long) ((Jwt) auth.getPrincipal()).getClaims().get("userId");
+        if (!currentUserId.equals(userId)) {
+            throw new UnauthorizedException("User is not authorized to change this password.");
+        }
+        User user = userRepository.getOne(userId);
+        if (!encoder.matches(oldPassword, user.getPassword())) {
+            throw new IllegalArgumentException("Old password is incorrect");
+        }
+
+        String passwordPattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$";
+        Pattern pattern = Pattern.compile(passwordPattern);
+        Matcher matcher = pattern.matcher(newPassword);
+
+        if (!matcher.matches()) {
+            throw new IllegalArgumentException("Password must contain at least one digit, one lowercase letter, one uppercase letter, one special character and be at least 8 characters long");
+        }
+        user.setPassword(encoder.encode(newPassword));
+        userRepository.save(user);
     }
 
     public MaxWeightDTO getMaxWeight(Long userId, Long exerciseId) {

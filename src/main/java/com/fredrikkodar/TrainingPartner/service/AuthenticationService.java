@@ -43,7 +43,6 @@ public class AuthenticationService {
        if (!matcher.matches()) {
               throw new IllegalArgumentException("Password must contain at least one digit, one lowercase letter, one uppercase letter, one special character and be at least 8 characters long");
        }
-
        String encodedPassword = passwordEncoder.encode(password);
        Role userRole = roleRepository.findByAuthority("USER").get();
 

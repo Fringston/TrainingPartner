@@ -36,6 +36,12 @@ public class AdminService {
         return convertToUserDTO(user);
     }
 
+    public String deleteUser(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User with id " + userId + " not found"));
+        userRepository.delete(user);
+        return "User with id " + userId + " has been deleted";
+    }
+
     private UserDTO convertToUserDTO(User user) {
         UserDTO userDTO = new UserDTO();
         userDTO.setUserId(user.getUserId());

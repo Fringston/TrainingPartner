@@ -39,14 +39,15 @@ public class UserController {
         }
     }
 
-    //Lägg till UnauthorizedException
     @PostMapping("/maxweight")
     public ResponseEntity<MaxWeightDTO> setMaxWeight(@RequestBody MaxWeightDTO request) {
         try {
             MaxWeightDTO userMaxWeight = userService.setMaxWeight(request.getUserId(), request.getExerciseId(), request.getMaxWeight());
             return new ResponseEntity<>(userMaxWeight, HttpStatus.CREATED);
-        } catch (UserNotFoundException | ExerciseNotFoundException | UnauthorizedException e) {
+        } catch (ExerciseNotFoundException e) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        } catch (UnauthorizedException e) {
+                return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
         } catch (MaxWeightAlreadyExistsException e) {
             return new ResponseEntity<>(null, HttpStatus.CONFLICT);
         }
@@ -57,8 +58,10 @@ public class UserController {
         try {
             MaxWeightDTO userMaxWeight = userService.updateMaxWeight(request.getUserId(), request.getExerciseId(), request.getMaxWeight());
             return new ResponseEntity<>(userMaxWeight, HttpStatus.OK);
-        } catch (UserNotFoundException | ExerciseNotFoundException e) {
+        } catch (ExerciseNotFoundException e) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        } catch (UnauthorizedException e) {
+            return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
         } catch (MaxWeightNotFoundException e) {
             try {
                 MaxWeightDTO userMaxWeight = userService.setMaxWeight(request.getUserId(), request.getExerciseId(), request.getMaxWeight());

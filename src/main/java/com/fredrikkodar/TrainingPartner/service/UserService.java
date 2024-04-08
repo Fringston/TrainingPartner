@@ -47,10 +47,8 @@ public class UserService implements UserDetailsService {
     }
 
     public MaxWeightDTO getMaxWeight(Long userId, Long exerciseId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        Exercise exercise = exerciseRepository.findById(exerciseId)
-                .orElseThrow(() -> new ExerciseNotFoundException("Exercise not found"));
+        userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        exerciseRepository.findById(exerciseId).orElseThrow(() -> new ExerciseNotFoundException("Exercise not found"));
         UserMaxWeight userMaxWeight = userMaxWeightRepository.findByUser_UserIdAndExercise_ExerciseId(userId, exerciseId)
                 .orElseThrow(() -> new MaxWeightNotFoundException("Max weight not found"));
         return convertToDTO(userMaxWeight);
@@ -70,9 +68,7 @@ public class UserService implements UserDetailsService {
     public MaxWeightDTO setMaxWeight(Long userId, Long exerciseId, int maxWeight) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Long currentUserId = (Long) ((Jwt) auth.getPrincipal()).getClaims().get("userId");
-        User currentUser = userRepository.findById(currentUserId)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        if (!currentUser.getUserId().equals(userId)) {
+        if (!currentUserId.equals(userId)) {
             throw new UnauthorizedException("User is not authorized to modify this max weight");
         }
         Exercise exercise = exerciseRepository.findById(exerciseId)
@@ -82,7 +78,7 @@ public class UserService implements UserDetailsService {
             throw new MaxWeightAlreadyExistsException("Max weight already exists");
         }
         UserMaxWeight userMaxWeight = new UserMaxWeight();
-        userMaxWeight.setUser(currentUser);
+        userMaxWeight.setUser(userRepository.getOne(userId));
         userMaxWeight.setExercise(exercise);
         userMaxWeight.setMaxWeight(maxWeight);
 
@@ -93,12 +89,10 @@ public class UserService implements UserDetailsService {
     public MaxWeightDTO updateMaxWeight(Long userId, Long exerciseId, int maxWeight) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Long currentUserId = (Long) ((Jwt) auth.getPrincipal()).getClaims().get("userId");
-        User currentUser = userRepository.findById(currentUserId)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        if (!currentUser.getUserId().equals(userId)) {
+        if (!currentUserId.equals(userId)) {
             throw new UnauthorizedException("User is not authorized to modify this max weight");
         }
-        Exercise exercise = exerciseRepository.findById(exerciseId)
+        exerciseRepository.findById(exerciseId)
                 .orElseThrow(() -> new ExerciseNotFoundException("Exercise not found"));
         UserMaxWeight userMaxWeight = userMaxWeightRepository.findByUser_UserIdAndExercise_ExerciseId(userId, exerciseId)
                 .orElseThrow(() -> new MaxWeightNotFoundException("Max weight not found"));

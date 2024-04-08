@@ -1,8 +1,8 @@
 package com.fredrikkodar.TrainingPartner.service;
 
 import com.fredrikkodar.TrainingPartner.dto.LoginResponseDTO;
-import com.fredrikkodar.TrainingPartner.models.Role;
-import com.fredrikkodar.TrainingPartner.models.User;
+import com.fredrikkodar.TrainingPartner.entities.Role;
+import com.fredrikkodar.TrainingPartner.entities.User;
 import com.fredrikkodar.TrainingPartner.repository.RoleRepository;
 import com.fredrikkodar.TrainingPartner.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -32,7 +32,8 @@ public class AuthenticationService {
     @Autowired
     private TokenService tokenService;
 
-    public User registerUser(String username, String password) {
+
+   public User registerUser(String username, String password) {
         String encodedPassword = passwordEncoder.encode(password);
         Role userRole = roleRepository.findByAuthority("USER").get();
 
@@ -52,4 +53,17 @@ public class AuthenticationService {
             return new LoginResponseDTO(null, "");
         }
     }
+
+    /*
+    // Ny LoginResponseDTO som endast skickar med jwt och skippar hela user-objektet
+    public LoginResponseDTO loginUser(String username, String password) {
+        try {
+            Authentication auth = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(username, password));
+            String token = tokenService.generateJwt(auth);
+            return new LoginResponseDTO(token);
+        } catch (AuthenticationException e) {
+            return new LoginResponseDTO("");
+        }
+    }*/
 }

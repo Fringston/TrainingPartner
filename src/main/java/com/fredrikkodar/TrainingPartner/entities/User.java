@@ -1,9 +1,8 @@
-package com.fredrikkodar.TrainingPartner.models;
+package com.fredrikkodar.TrainingPartner.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -34,6 +33,17 @@ public class User implements UserDetails {
             inverseJoinColumns =  {@JoinColumn(name = "role_id")}
     )
     private Set<Role> authorities;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<UserMaxWeight> maxWeights;
+
+    public User(Long id, String username, String encodedPassword, Set<Role> authorities) {
+        this.userId = id;
+        this.username = username;
+        this.password = encodedPassword;
+        this.authorities = authorities;
+    }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {return this.authorities;}

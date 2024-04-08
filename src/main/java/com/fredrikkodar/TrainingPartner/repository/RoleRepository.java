@@ -1,6 +1,6 @@
 package com.fredrikkodar.TrainingPartner.repository;
 
-import com.fredrikkodar.TrainingPartner.models.Role;
+import com.fredrikkodar.TrainingPartner.entities.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

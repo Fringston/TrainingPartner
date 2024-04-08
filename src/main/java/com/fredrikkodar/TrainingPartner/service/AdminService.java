@@ -54,9 +54,6 @@ public class AdminService {
         return "User with id " + userId + " has been deleted";
     }
 
-    private static final Logger logger = LoggerFactory.getLogger(AdminService.class);
-
-
     public void grantAdminRole(Long userId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Long currentUserId = (Long) ((Jwt) auth.getPrincipal()).getClaims().get("userId");
@@ -69,16 +66,11 @@ public class AdminService {
         User userToGrant = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
-        Optional<Role> optionalAdminRole = roleRepository.findByAuthority("ADMIN");
-        Role adminAuthority;
-        if (optionalAdminRole.isPresent()) {
-            // If the admin role already exists in the database, use it
-            adminAuthority = optionalAdminRole.get();
-        } else {
-            // If the admin role does not exist in the database, create and save it
-            adminAuthority = new Role("ADMIN");
-            roleRepository.save(adminAuthority);
-        }
+        // Directly get the admin role from the database
+        Role adminAuthority = roleRepository.findByAuthority("ADMIN").get();
+
+        // Clear the existing roles
+        userToGrant.getAuthorities().clear();
 
         Set<Role> authorities = new HashSet<>();
         for (GrantedAuthority authority : userToGrant.getAuthorities()) {

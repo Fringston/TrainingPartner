@@ -44,7 +44,6 @@ public class User implements UserDetails {
         this.authorities = authorities;
     }
 
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {return this.authorities;}
 

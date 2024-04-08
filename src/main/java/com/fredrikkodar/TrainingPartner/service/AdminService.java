@@ -29,7 +29,12 @@ public class AdminService {
         throw new UserNotFoundException("No users found");
         }
         return allUsersDTO;
-}
+    }
+
+    public UserDTO getUserById(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User with id " + userId + " not found"));
+        return convertToUserDTO(user);
+    }
 
     private UserDTO convertToUserDTO(User user) {
         UserDTO userDTO = new UserDTO();

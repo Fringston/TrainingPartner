@@ -75,14 +75,14 @@ public class UserService implements UserDetailsService {
         exerciseRepository.findById(exerciseId).orElseThrow(() -> new ExerciseNotFoundException("Exercise not found"));
         UserMaxWeight userMaxWeight = userMaxWeightRepository.findByUser_UserIdAndExercise_ExerciseId(userId, exerciseId)
                 .orElseThrow(() -> new MaxWeightNotFoundException("Max weight not found"));
-        return convertToDTO(userMaxWeight);
+        return convertToWeightDTO(userMaxWeight);
     }
 
     public List<MaxWeightDTO> getAllMaxWeights() {
         List<UserMaxWeight> allUserWeights = userMaxWeightRepository.findAll();
         List<MaxWeightDTO> allUserWeightsDTO = new ArrayList<>();
         for (UserMaxWeight userMaxWeight : allUserWeights) {
-            allUserWeightsDTO.add(convertToDTO(userMaxWeight));
+            allUserWeightsDTO.add(convertToWeightDTO(userMaxWeight));
         } if (allUserWeightsDTO.isEmpty()) {
             throw new MaxWeightNotFoundException( "No max weights found");
         }
@@ -107,7 +107,7 @@ public class UserService implements UserDetailsService {
         userMaxWeight.setMaxWeight(maxWeight);
 
         UserMaxWeight savedUserMaxWeight = userMaxWeightRepository.save(userMaxWeight);
-        return convertToDTO(savedUserMaxWeight);
+        return convertToWeightDTO(savedUserMaxWeight);
     }
 
     public MaxWeightDTO updateMaxWeight(Long userId, Long exerciseId, int maxWeight) {
@@ -122,10 +122,10 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new MaxWeightNotFoundException("Max weight not found"));
         userMaxWeight.setMaxWeight(maxWeight);
         UserMaxWeight savedUserMaxWeight = userMaxWeightRepository.save(userMaxWeight);
-        return convertToDTO(savedUserMaxWeight);
+        return convertToWeightDTO(savedUserMaxWeight);
     }
 
-    public MaxWeightDTO convertToDTO(UserMaxWeight userMaxWeight) {
+    public MaxWeightDTO convertToWeightDTO(UserMaxWeight userMaxWeight) {
         MaxWeightDTO dto = new MaxWeightDTO();
         dto.setUserId(userMaxWeight.getUser().getUserId());
         dto.setExerciseId(userMaxWeight.getExercise().getExerciseId());

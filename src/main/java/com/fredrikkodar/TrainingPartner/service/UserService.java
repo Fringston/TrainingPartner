@@ -1,5 +1,6 @@
 package com.fredrikkodar.TrainingPartner.service;
 
+import com.fredrikkodar.TrainingPartner.dto.ExerciseDTO;
 import com.fredrikkodar.TrainingPartner.dto.MaxWeightDTO;
 import com.fredrikkodar.TrainingPartner.entities.Exercise;
 import com.fredrikkodar.TrainingPartner.entities.User;
@@ -46,6 +47,10 @@ public class UserService implements UserDetailsService {
 
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found."));
+    }
+
+    public User getUserById(Long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
     public void changePassword(Long userId, String oldPassword, String newPassword) {
@@ -133,5 +138,24 @@ public class UserService implements UserDetailsService {
         dto.setUsername(userMaxWeight.getUser().getUsername());
         dto.setExerciseName(userMaxWeight.getExercise().getName());
         return dto;
+    }
+
+    public List<ExerciseDTO> getExercisesFromOneMuscleGroup(Long muscleGroupId) {
+        List<Exercise> exercises = exerciseRepository.findByMuscleGroups_MuscleGroupId(muscleGroupId);
+        List<ExerciseDTO> exerciseDTOs = new ArrayList<>();
+        for (Exercise exercise : exercises) {
+            ExerciseDTO dto = new ExerciseDTO();
+            dto.setExerciseId(exercise.getExerciseId());
+            dto.setName(exercise.getName());
+            exerciseDTOs.add(dto);
+        }
+        return exerciseDTOs;
+    }
+
+    public ExerciseDTO selectRandomExercise(List<ExerciseDTO> exercises) {
+        ExerciseDTO selectedExercise = new ExerciseDTO();
+        int randomIndex = (int) (Math.random() * exercises.size());
+        selectedExercise = exercises.get(randomIndex);
+        return selectedExercise;
     }
 }

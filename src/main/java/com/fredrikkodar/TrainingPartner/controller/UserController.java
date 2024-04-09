@@ -1,5 +1,6 @@
 package com.fredrikkodar.TrainingPartner.controller;
 
+import com.fredrikkodar.TrainingPartner.dto.ExerciseDTO;
 import com.fredrikkodar.TrainingPartner.dto.MaxWeightDTO;
 import com.fredrikkodar.TrainingPartner.dto.PasswordChangeDTO;
 import com.fredrikkodar.TrainingPartner.entities.UserMaxWeight;
@@ -83,6 +84,17 @@ public class UserController {
             } catch (UserNotFoundException | ExerciseNotFoundException | MaxWeightAlreadyExistsException e1) {
                 return new ResponseEntity<>(null, HttpStatus.CONFLICT);
             }
+        }
+    }
+
+    @GetMapping("/exercise/{muscleGroupId}")
+    public ResponseEntity <ExerciseDTO> getExercise(@PathVariable Long muscleGroupId) {
+        try {
+            List<ExerciseDTO> exercises = userService.getExercisesFromOneMuscleGroup(muscleGroupId);
+            ExerciseDTO selectedExercise = userService.selectRandomExercise(exercises);
+            return new ResponseEntity<>(selectedExercise, HttpStatus.OK);
+        } catch (ExerciseNotFoundException | MuscleGroupNotFound e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
 

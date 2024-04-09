@@ -152,10 +152,17 @@ public class UserService implements UserDetailsService {
         return exerciseDTOs;
     }
 
-    public ExerciseDTO selectRandomExercise(List<ExerciseDTO> exercises) {
-        ExerciseDTO selectedExercise = new ExerciseDTO();
-        int randomIndex = (int) (Math.random() * exercises.size());
-        selectedExercise = exercises.get(randomIndex);
-        return selectedExercise;
+    public List<ExerciseDTO> selectRandomExercises(List<ExerciseDTO> exercises, int numberOfExercises) {
+        if (numberOfExercises > exercises.size()) {
+            throw new IllegalArgumentException("Number of exercises to select cannot be greater than the total number of exercises");
+        }
+
+        List<ExerciseDTO> selectedExercises = new ArrayList<>();
+        for (int i = 0; i < numberOfExercises; i++) {
+            int randomIndex = (int) (Math.random() * exercises.size());
+            selectedExercises.add(exercises.get(randomIndex));
+            exercises.remove(randomIndex);
+        }
+        return selectedExercises;
     }
 }

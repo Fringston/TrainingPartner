@@ -87,14 +87,16 @@ public class UserController {
         }
     }
 
-    @GetMapping("/exercise/{muscleGroupId}")
-    public ResponseEntity <ExerciseDTO> getExercise(@PathVariable Long muscleGroupId) {
+    @GetMapping("/exercise/{muscleGroupId}/{numberOfExercises}")
+    public ResponseEntity <List<ExerciseDTO>> getExercise(@PathVariable Long muscleGroupId, @PathVariable int numberOfExercises) {
         try {
             List<ExerciseDTO> exercises = userService.getExercisesFromOneMuscleGroup(muscleGroupId);
-            ExerciseDTO selectedExercise = userService.selectRandomExercise(exercises);
-            return new ResponseEntity<>(selectedExercise, HttpStatus.OK);
+            List<ExerciseDTO> selectedExercises = userService.selectRandomExercises(exercises,numberOfExercises);
+            return new ResponseEntity<>(selectedExercises, HttpStatus.OK);
         } catch (ExerciseNotFoundException | MuscleGroupNotFound e) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 

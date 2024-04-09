@@ -6,6 +6,8 @@ import com.fredrikkodar.TrainingPartner.dto.PasswordChangeDTO;
 import com.fredrikkodar.TrainingPartner.entities.UserMaxWeight;
 import com.fredrikkodar.TrainingPartner.exceptions.*;
 import com.fredrikkodar.TrainingPartner.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -87,15 +89,32 @@ public class UserController {
         }
     }
 
-    @GetMapping("/exercise/{muscleGroupId}/{numberOfExercises}")
-    public ResponseEntity <List<ExerciseDTO>> getExercise(@PathVariable Long muscleGroupId, @PathVariable int numberOfExercises) {
+    private final Logger logger = LoggerFactory.getLogger(UserController.class);
+
+    @GetMapping("/exercise/{userId}/{muscleGroupId}/{numberOfExercises}")
+    public ResponseEntity<List<ExerciseDTO>> getExercise(@PathVariable Long userId, @PathVariable Long muscleGroupId, @PathVariable int numberOfExercises) {
         try {
             List<ExerciseDTO> exercises = userService.getExercisesFromOneMuscleGroup(muscleGroupId);
-            List<ExerciseDTO> selectedExercises = userService.selectRandomExercises(exercises,numberOfExercises);
+            List<ExerciseDTO> selectedExercises = userService.selectRandomExercises(exercises, numberOfExercises);
+            for (ExerciseDTO exercise : selectedExercises) {
+                if (userService.checkIfMaxWeightExists(userId, exercise.getExerciseId())) {
+                    String setsAndReps = userService.selectSetsAndReps(exercise);
+                    double percentage = userService.calculatePercentage(setsAndReps);
+                    double maxWeight = userService.getMaxWeight(userId, exercise.getExerciseId()).getMaxWeight();
+                    double suggestedWeight = maxWeight * percentage;
+                    exercise.setSuggestedWeight(String.valueOf(suggestedWeight));
+                    exercise.setSetsAndReps(setsAndReps);
+                } else if (!userService.checkIfMaxWeightExists(userId, exercise.getExerciseId())) {
+                    String setsAndReps = userService.selectSetsAndReps(exercise);
+                    exercise.generalSuggestedWeight();
+                    exercise.setSetsAndReps(setsAndReps);
+                }
+            }
             return new ResponseEntity<>(selectedExercises, HttpStatus.OK);
         } catch (ExerciseNotFoundException | MuscleGroupNotFound e) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         } catch (IllegalArgumentException e) {
+            logger.error("Error occurred while trying to get exercises: {}", e.getMessage());
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }

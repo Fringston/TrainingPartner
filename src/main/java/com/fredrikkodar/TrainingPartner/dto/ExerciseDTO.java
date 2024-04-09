@@ -11,5 +11,10 @@ public class ExerciseDTO {
     private Long exerciseId;
     private String name;
     private Set<MuscleGroup> muscleGroups;
+    private String suggestedWeight;
+    private String setsAndReps;
 
+    public void generalSuggestedWeight() {
+        this.suggestedWeight = "Choose a weight that allows you to complete the desired number of sets and reps with good form.";
+    }
 }

@@ -21,6 +21,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +41,8 @@ public class UserService implements UserDetailsService {
     private UserMaxWeightRepository userMaxWeightRepository;
     @Autowired
     private PasswordEncoder encoder;
+
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -165,4 +169,72 @@ public class UserService implements UserDetailsService {
         }
         return selectedExercises;
     }
+
+    public boolean checkIfMaxWeightExists(Long userId, Long exerciseId) {
+        return userMaxWeightRepository.findByUser_UserIdAndExercise_ExerciseId(userId, exerciseId).isPresent();
+    }
+
+    public String selectSetsAndReps(ExerciseDTO exerciseDTO) {
+        ExerciseDTO exercise = new ExerciseDTO();
+        int reps;
+        int sets;
+        String[] possibleRepsAndSets = {"3x12", "4x10", "5x8", "6x6", "5x5", "6x4", "4x2"};
+        String setsAndReps = possibleRepsAndSets[(int) (Math.random() * possibleRepsAndSets.length)];
+        switch(setsAndReps) {
+            case "3x12":
+                sets = 3;
+                reps = 12;
+                break;
+            case "4x10":
+                sets = 4;
+                reps = 10;
+                break;
+            case "5x8":
+                sets = 5;
+                reps = 8;
+                break;
+            case "6x6":
+                sets = 6;
+                reps = 6;
+                break;
+            case "5x5":
+                sets = 5;
+                reps = 5;
+                break;
+            case "6x4":
+                sets = 6;
+                reps = 4;
+                break;
+            case "4x2":
+                sets = 4;
+                reps = 2;
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid number of reps and sets");
+
+        }
+        return sets + "x" + reps;
+    }
+
+    public double calculatePercentage(String repsAndSets) {
+        switch(repsAndSets) {
+            case "3x12":
+                return 0.6;
+            case "4x10":
+                return 0.7;
+            case "5x8":
+                return 0.75;
+            case "6x6":
+                return 0.8;
+            case "5x5":
+                return 0.85;
+            case "6x4":
+                return 0.9;
+            case "4x2":
+                return 0.95;
+            default:
+                throw new IllegalArgumentException("Invalid number of reps and sets");
+        }
+    }
+
 }

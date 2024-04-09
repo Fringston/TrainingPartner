@@ -24,6 +24,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,6 +90,7 @@ public class UserService implements UserDetailsService {
         return convertToWeightDTO(userMaxWeight);
     }
 
+    //Ska denna metod hämta alla PR hos en användare eller alla PR för alla användare?
     public List<MaxWeightDTO> getAllMaxWeights() {
         List<UserMaxWeight> allUserWeights = userMaxWeightRepository.findAll();
         List<MaxWeightDTO> allUserWeightsDTO = new ArrayList<>();
@@ -134,6 +136,20 @@ public class UserService implements UserDetailsService {
         userMaxWeight.setMaxWeight(maxWeight);
         UserMaxWeight savedUserMaxWeight = userMaxWeightRepository.save(userMaxWeight);
         return convertToWeightDTO(savedUserMaxWeight);
+    }
+
+    @Transactional
+    public void deleteMaxWeight(Long userId, Long exerciseId) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Long currentUserId = (Long) ((Jwt) auth.getPrincipal()).getClaims().get("userId");
+        if (!currentUserId.equals(userId)) {
+            throw new UnauthorizedException("User is not authorized to delete this max weight");
+        }
+        exerciseRepository.findById(exerciseId)
+                .orElseThrow(() -> new ExerciseNotFoundException("Exercise not found"));
+        userMaxWeightRepository.findByUser_UserIdAndExercise_ExerciseId(userId, exerciseId)
+                .orElseThrow(() -> new MaxWeightNotFoundException("Max weight not found"));
+        userMaxWeightRepository.deleteByUser_UserIdAndExercise_ExerciseId(userId, exerciseId);
     }
 
     public MaxWeightDTO convertToWeightDTO(UserMaxWeight userMaxWeight) {

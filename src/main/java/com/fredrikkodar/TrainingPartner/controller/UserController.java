@@ -58,6 +58,7 @@ public class UserController {
         }
     }
 
+    //Ska denna metod hämta alla PR hos en användare eller alla PR för alla användare?
     @GetMapping("/maxweights")
     public ResponseEntity<List<MaxWeightDTO>> getAllMaxWeights() {
         try {
@@ -101,7 +102,16 @@ public class UserController {
         }
     }
 
-    private final Logger logger = LoggerFactory.getLogger(UserController.class);
+    @DeleteMapping("/maxweight/{userId}/{exerciseId}")
+    public ResponseEntity<String> deleteMaxWeight (@PathVariable Long userId, @PathVariable Long exerciseId){
+        try {
+            userService.deleteMaxWeight(userId, exerciseId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (MaxWeightNotFoundException | ExerciseNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 
     @GetMapping("/exercise/{userId}/{muscleGroupId}/{numberOfExercises}")
     public ResponseEntity<List<ExerciseDTO>> getExercise(@PathVariable Long userId, @PathVariable Long muscleGroupId, @PathVariable int numberOfExercises) {
@@ -126,7 +136,6 @@ public class UserController {
         } catch (ExerciseNotFoundException | MuscleGroupNotFound e) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         } catch (IllegalArgumentException e) {
-            logger.error("Error occurred while trying to get exercises: {}", e.getMessage());
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }

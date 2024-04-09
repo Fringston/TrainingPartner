@@ -3,6 +3,8 @@ package com.fredrikkodar.TrainingPartner.controller;
 import com.fredrikkodar.TrainingPartner.dto.ExerciseDTO;
 import com.fredrikkodar.TrainingPartner.dto.MaxWeightDTO;
 import com.fredrikkodar.TrainingPartner.dto.PasswordChangeDTO;
+import com.fredrikkodar.TrainingPartner.dto.UserDTO;
+import com.fredrikkodar.TrainingPartner.entities.User;
 import com.fredrikkodar.TrainingPartner.entities.UserMaxWeight;
 import com.fredrikkodar.TrainingPartner.exceptions.*;
 import com.fredrikkodar.TrainingPartner.service.UserService;
@@ -23,6 +25,16 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserDTO> getUser(@PathVariable Long userId) {
+        try {
+            UserDTO user = userService.getUser(userId);
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        } catch (UserNotFoundException e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
 
     @PatchMapping("/password")
     public ResponseEntity<Void> changePassword(@RequestBody PasswordChangeDTO request) {

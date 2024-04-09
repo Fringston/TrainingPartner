@@ -2,6 +2,7 @@ package com.fredrikkodar.TrainingPartner.service;
 
 import com.fredrikkodar.TrainingPartner.dto.ExerciseDTO;
 import com.fredrikkodar.TrainingPartner.dto.MaxWeightDTO;
+import com.fredrikkodar.TrainingPartner.dto.UserDTO;
 import com.fredrikkodar.TrainingPartner.entities.Exercise;
 import com.fredrikkodar.TrainingPartner.entities.User;
 import com.fredrikkodar.TrainingPartner.entities.UserMaxWeight;
@@ -53,8 +54,9 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found."));
     }
 
-    public User getUserById(Long userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    public UserDTO getUser(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return convertToUserDTO(user);
     }
 
     public void changePassword(Long userId, String oldPassword, String newPassword) {
@@ -142,6 +144,13 @@ public class UserService implements UserDetailsService {
         dto.setUsername(userMaxWeight.getUser().getUsername());
         dto.setExerciseName(userMaxWeight.getExercise().getName());
         return dto;
+    }
+
+    public UserDTO convertToUserDTO(User user) {
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUserId(user.getUserId());
+        userDTO.setUsername(user.getUsername());
+        return userDTO;
     }
 
     public List<ExerciseDTO> getExercisesFromOneMuscleGroup(Long muscleGroupId) {

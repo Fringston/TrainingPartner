@@ -72,10 +72,8 @@ public class AdminService {
         User userToGrant = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
-        // Directly get the admin role from the database
         Role adminAuthority = roleRepository.findByAuthority("ADMIN").get();
 
-        // Clear the existing roles
         userToGrant.getAuthorities().clear();
 
         Set<Role> authorities = new HashSet<>();
@@ -114,8 +112,6 @@ public class AdminService {
         logger.info("Exercise created successfully: {}", createdExercise);
         return createdExercise;
     }
-
-
 
     private UserDTO convertToUserDTO(User user) {
         UserDTO userDTO = new UserDTO();

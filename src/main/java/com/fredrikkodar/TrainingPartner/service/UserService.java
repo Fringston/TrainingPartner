@@ -83,6 +83,11 @@ public class UserService implements UserDetailsService {
     }
 
     public MaxWeightDTO getMaxWeight(Long userId, Long exerciseId) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Long currentUserId = (Long) ((Jwt) auth.getPrincipal()).getClaims().get("userId");
+        if (!currentUserId.equals(userId)) {
+            throw new UnauthorizedException("User is not authorized to modify this max weight");
+        }
         userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         exerciseRepository.findById(exerciseId).orElseThrow(() -> new ExerciseNotFoundException("Exercise not found"));
         UserMaxWeight userMaxWeight = userMaxWeightRepository.findByUser_UserIdAndExercise_ExerciseId(userId, exerciseId)
@@ -90,8 +95,12 @@ public class UserService implements UserDetailsService {
         return convertToWeightDTO(userMaxWeight);
     }
 
-    //Ska denna metod hämta alla PR hos en användare eller alla PR för alla användare?
-    public List<MaxWeightDTO> getAllMaxWeights() {
+    public List<MaxWeightDTO> getAllMaxWeights(Long userId) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Long currentUserId = (Long) ((Jwt) auth.getPrincipal()).getClaims().get("userId");
+        if (!currentUserId.equals(userId)) {
+            throw new UnauthorizedException("User is not authorized to modify this max weight");
+        }
         List<UserMaxWeight> allUserWeights = userMaxWeightRepository.findAll();
         List<MaxWeightDTO> allUserWeightsDTO = new ArrayList<>();
         for (UserMaxWeight userMaxWeight : allUserWeights) {

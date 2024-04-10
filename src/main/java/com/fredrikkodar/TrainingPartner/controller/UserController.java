@@ -53,18 +53,21 @@ public class UserController {
         try {
             MaxWeightDTO dto = userService.getMaxWeight(userId, exerciseId);
             return new ResponseEntity<>(dto, HttpStatus.OK);
+        } catch (UnauthorizedException e) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         } catch (UserNotFoundException | ExerciseNotFoundException | MaxWeightNotFoundException e) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
 
-    //Ska denna metod hämta alla PR hos en användare eller alla PR för alla användare?
-    @GetMapping("/maxweights")
-    public ResponseEntity<List<MaxWeightDTO>> getAllMaxWeights() {
+    @GetMapping("/maxweights/{userId}")
+    public ResponseEntity<List<MaxWeightDTO>> getAllMaxWeights(@PathVariable Long userId) {
         try {
-            List<MaxWeightDTO> dtos = userService.getAllMaxWeights();
+            List<MaxWeightDTO> dtos = userService.getAllMaxWeights(userId);
             return new ResponseEntity<>(dtos, HttpStatus.OK);
-        } catch (MaxWeightNotFoundException e) {
+        } catch (UnauthorizedException e) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        }  catch (MaxWeightNotFoundException e) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
@@ -111,7 +114,6 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
 
     @GetMapping("/exercise/{userId}/{muscleGroupId}/{numberOfExercises}")
     public ResponseEntity<List<ExerciseDTO>> getExercise(@PathVariable Long userId, @PathVariable Long muscleGroupId, @PathVariable int numberOfExercises) {

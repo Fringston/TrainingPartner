@@ -1,11 +1,16 @@
 package com.fredrikkodar.TrainingPartner.controller;
 
+import com.fredrikkodar.TrainingPartner.dto.ExerciseDTO;
 import com.fredrikkodar.TrainingPartner.dto.UserDTO;
+import com.fredrikkodar.TrainingPartner.entities.Exercise;
 import com.fredrikkodar.TrainingPartner.entities.User;
+import com.fredrikkodar.TrainingPartner.exceptions.ExerciseAlreadyExistsException;
 import com.fredrikkodar.TrainingPartner.exceptions.UnauthorizedException;
 import com.fredrikkodar.TrainingPartner.exceptions.UserNotFoundException;
 import com.fredrikkodar.TrainingPartner.service.AdminService;
 import com.fredrikkodar.TrainingPartner.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +40,7 @@ public class AdminController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable Long userId) {
+    public ResponseEntity<UserDTO>getUserById(@PathVariable Long userId) {
         try {
             UserDTO user = adminService.getUserById(userId);
             return new ResponseEntity<>(user, HttpStatus.OK);
@@ -65,6 +70,24 @@ public class AdminController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+    private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
+
+    @PostMapping("/exercise")
+    public ResponseEntity<ExerciseDTO> createExercise(@RequestBody ExerciseDTO request) {
+        logger.info("Received request to create exercise: {}", request);
+        try {
+            ExerciseDTO exercise = adminService.createExercise(request.getName(), request.getMuscleGroups());
+            logger.info("Exercise created successfully: {}", exercise);
+            return new ResponseEntity<>(exercise, HttpStatus.CREATED);
+        } catch (ExerciseAlreadyExistsException e) {
+            logger.error("Exercise already exists: {}", e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.CONFLICT);
+        } catch (IllegalArgumentException e) {
+            logger.error("Invalid arguments: {}", e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
 
 }
 

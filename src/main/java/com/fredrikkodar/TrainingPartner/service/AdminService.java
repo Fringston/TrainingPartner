@@ -1,11 +1,16 @@
 package com.fredrikkodar.TrainingPartner.service;
 
+import com.fredrikkodar.TrainingPartner.dto.ExerciseDTO;
 import com.fredrikkodar.TrainingPartner.dto.RoleDTO;
 import com.fredrikkodar.TrainingPartner.dto.UserDTO;
+import com.fredrikkodar.TrainingPartner.entities.Exercise;
+import com.fredrikkodar.TrainingPartner.entities.MuscleGroup;
 import com.fredrikkodar.TrainingPartner.entities.Role;
 import com.fredrikkodar.TrainingPartner.entities.User;
+import com.fredrikkodar.TrainingPartner.exceptions.ExerciseAlreadyExistsException;
 import com.fredrikkodar.TrainingPartner.exceptions.UnauthorizedException;
 import com.fredrikkodar.TrainingPartner.exceptions.UserNotFoundException;
+import com.fredrikkodar.TrainingPartner.repository.ExerciseRepository;
 import com.fredrikkodar.TrainingPartner.repository.RoleRepository;
 import com.fredrikkodar.TrainingPartner.repository.UserRepository;
 import org.slf4j.Logger;
@@ -30,6 +35,8 @@ public class AdminService {
     private UserRepository userRepository;
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private ExerciseRepository exerciseRepository;
 
     public List<UserDTO> getAllUsers() {
     List<User> allUsers = userRepository.findAll();
@@ -83,6 +90,33 @@ public class AdminService {
         userRepository.save(userToGrant);
     }
 
+    private static final Logger logger = LoggerFactory.getLogger(AdminService.class);
+
+    public ExerciseDTO createExercise(String name, Set<MuscleGroup> muscleGroups) {
+        logger.info("Creating exercise with name: {} and muscle groups: {}", name, muscleGroups);
+        Exercise exercise = new Exercise();
+        if (name == null || name.isEmpty()) {
+            logger.error("Invalid argument: Name cannot be null or empty");
+            throw new IllegalArgumentException("Name cannot be null or empty");
+        } else if (exerciseRepository.existsByName(name)) {
+            logger.error("Exercise already exists with name: {}", name);
+            throw new ExerciseAlreadyExistsException("Exercise with name " + name + " already exists");
+        } else {
+            exercise.setName(name);
+        }
+        if (muscleGroups == null || muscleGroups.isEmpty()) {
+            logger.error("Invalid argument: Muscle groups cannot be null or empty");
+            throw new IllegalArgumentException("Muscle groups cannot be null or empty");
+        } else {
+            exercise.setMuscleGroups(muscleGroups);
+        }
+        ExerciseDTO createdExercise = convertToExerciseDTO(exerciseRepository.save(exercise));
+        logger.info("Exercise created successfully: {}", createdExercise);
+        return createdExercise;
+    }
+
+
+
     private UserDTO convertToUserDTO(User user) {
         UserDTO userDTO = new UserDTO();
         userDTO.setUserId(user.getUserId());
@@ -98,6 +132,14 @@ public class AdminService {
 
         userDTO.setRoles(roleDTOs);
         return userDTO;
+    }
+
+    private ExerciseDTO convertToExerciseDTO(Exercise exercise) {
+        ExerciseDTO exerciseDTO = new ExerciseDTO();
+        exerciseDTO.setExerciseId(exercise.getExerciseId());
+        exerciseDTO.setName(exercise.getName());
+        exerciseDTO.setMuscleGroups(exercise.getMuscleGroups());
+        return exerciseDTO;
     }
 
 }

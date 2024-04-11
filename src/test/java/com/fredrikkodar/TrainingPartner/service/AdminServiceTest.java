@@ -15,6 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -50,6 +51,8 @@ class AdminServiceTest {
 
     @BeforeEach
     void setUp() {
+        MockitoAnnotations.openMocks(this); // Add this line
+
         // Arrange user1
         user1 = new User();
         user1.setUserId(1L);

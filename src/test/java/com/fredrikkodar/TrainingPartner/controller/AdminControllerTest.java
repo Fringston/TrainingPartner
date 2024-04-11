@@ -21,4 +21,24 @@ class AdminControllerTest {
     @Test
     void grantAdminRole() {
     }
+
+    @Test
+    void testGetAllUsers() {
+    }
+
+    @Test
+    void testGetUserById() {
+    }
+
+    @Test
+    void testDeleteUser() {
+    }
+
+    @Test
+    void testGrantAdminRole() {
+    }
+
+    @Test
+    void createExercise() {
+    }
 }

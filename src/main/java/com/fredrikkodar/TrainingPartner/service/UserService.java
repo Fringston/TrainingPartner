@@ -26,9 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -86,7 +84,7 @@ public class UserService implements UserDetailsService {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Long currentUserId = (Long) ((Jwt) auth.getPrincipal()).getClaims().get("userId");
         if (!currentUserId.equals(userId)) {
-            throw new UnauthorizedException("User is not authorized to modify this max weight");
+            throw new UnauthorizedException("User not authorized");
         }
         userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         exerciseRepository.findById(exerciseId).orElseThrow(() -> new ExerciseNotFoundException("Exercise not found"));
@@ -185,6 +183,9 @@ public class UserService implements UserDetailsService {
             ExerciseDTO dto = new ExerciseDTO();
             dto.setExerciseId(exercise.getExerciseId());
             dto.setName(exercise.getName());
+            Set<Long> muscleGroupIds = new HashSet<>();
+            muscleGroupIds.add(muscleGroupId);
+            dto.setMuscleGroupId(muscleGroupIds);
             exerciseDTOs.add(dto);
         }
         return exerciseDTOs;

@@ -135,6 +135,8 @@ public class UserController {
                 }
             }
             return new ResponseEntity<>(selectedExercises, HttpStatus.OK);
+        } catch (UnauthorizedException e) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         } catch (ExerciseNotFoundException | MuscleGroupNotFound e) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         } catch (IllegalArgumentException e) {

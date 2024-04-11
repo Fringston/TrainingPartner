@@ -17,7 +17,7 @@ class UserServiceTest {
     }
 
     @Test
-    void getUserById() {
+    void getUser() {
     }
 
     @Test
@@ -50,5 +50,65 @@ class UserServiceTest {
 
     @Test
     void selectRandomExercise() {
+    }
+
+    @Test
+    void testLoadUserByUsername() {
+    }
+
+    @Test
+    void testGetUser() {
+    }
+
+    @Test
+    void testChangePassword() {
+    }
+
+    @Test
+    void testGetMaxWeight() {
+    }
+
+    @Test
+    void testGetAllMaxWeights() {
+    }
+
+    @Test
+    void testSetMaxWeight() {
+    }
+
+    @Test
+    void testUpdateMaxWeight() {
+    }
+
+    @Test
+    void deleteMaxWeight() {
+    }
+
+    @Test
+    void testConvertToWeightDTO() {
+    }
+
+    @Test
+    void convertToUserDTO() {
+    }
+
+    @Test
+    void testGetExercisesFromOneMuscleGroup() {
+    }
+
+    @Test
+    void selectRandomExercises() {
+    }
+
+    @Test
+    void checkIfMaxWeightExists() {
+    }
+
+    @Test
+    void selectSetsAndReps() {
+    }
+
+    @Test
+    void calculatePercentage() {
     }
 }

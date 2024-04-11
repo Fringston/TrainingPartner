@@ -25,4 +25,36 @@ class UserControllerTest {
     @Test
     void updateMaxWeights() {
     }
+
+    @Test
+    void getUser() {
+    }
+
+    @Test
+    void testChangePassword() {
+    }
+
+    @Test
+    void testGetMaxWeight() {
+    }
+
+    @Test
+    void testGetAllMaxWeights() {
+    }
+
+    @Test
+    void testSetMaxWeight() {
+    }
+
+    @Test
+    void testUpdateMaxWeights() {
+    }
+
+    @Test
+    void deleteMaxWeight() {
+    }
+
+    @Test
+    void getExercise() {
+    }
 }

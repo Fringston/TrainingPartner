@@ -1,5 +1,6 @@
 package com.fredrikkodar.TrainingPartner.service;
 
+import com.fredrikkodar.TrainingPartner.dto.ExerciseCreationDTO;
 import com.fredrikkodar.TrainingPartner.dto.ExerciseDTO;
 import com.fredrikkodar.TrainingPartner.dto.RoleDTO;
 import com.fredrikkodar.TrainingPartner.dto.UserDTO;
@@ -11,6 +12,7 @@ import com.fredrikkodar.TrainingPartner.exceptions.ExerciseAlreadyExistsExceptio
 import com.fredrikkodar.TrainingPartner.exceptions.UnauthorizedException;
 import com.fredrikkodar.TrainingPartner.exceptions.UserNotFoundException;
 import com.fredrikkodar.TrainingPartner.repository.ExerciseRepository;
+import com.fredrikkodar.TrainingPartner.repository.MuscleGroupRepository;
 import com.fredrikkodar.TrainingPartner.repository.RoleRepository;
 import com.fredrikkodar.TrainingPartner.repository.UserRepository;
 import org.slf4j.Logger;
@@ -37,6 +39,8 @@ public class AdminService {
     private RoleRepository roleRepository;
     @Autowired
     private ExerciseRepository exerciseRepository;
+    @Autowired
+    private MuscleGroupRepository muscleGroupRepository;
 
     public List<UserDTO> getAllUsers() {
     List<User> allUsers = userRepository.findAll();
@@ -90,25 +94,28 @@ public class AdminService {
 
     private static final Logger logger = LoggerFactory.getLogger(AdminService.class);
 
-    public ExerciseDTO createExercise(String name, Set<MuscleGroup> muscleGroups) {
-        logger.info("Creating exercise with name: {} and muscle groups: {}", name, muscleGroups);
+    public ExerciseCreationDTO createExercise(ExerciseCreationDTO request) {
+        logger.info("Creating exercise with name: {} and muscle groups: {}", request.getName(), request.getMuscleGroupIds());
         Exercise exercise = new Exercise();
-        if (name == null || name.isEmpty()) {
+        if (request.getName() == null || request.getName().isEmpty()) {
             logger.error("Invalid argument: Name cannot be null or empty");
             throw new IllegalArgumentException("Name cannot be null or empty");
-        } else if (exerciseRepository.existsByName(name)) {
-            logger.error("Exercise already exists with name: {}", name);
-            throw new ExerciseAlreadyExistsException("Exercise with name " + name + " already exists");
+        } else if (exerciseRepository.existsByName(request.getName())) {
+            logger.error("Exercise already exists with name: {}", request.getName());
+            throw new ExerciseAlreadyExistsException("Exercise with name " + request.getName() + " already exists");
         } else {
-            exercise.setName(name);
+            exercise.setName(request.getName());
         }
-        if (muscleGroups == null || muscleGroups.isEmpty()) {
+        if (request.getMuscleGroupIds() == null || request.getMuscleGroupIds().isEmpty()) {
             logger.error("Invalid argument: Muscle groups cannot be null or empty");
             throw new IllegalArgumentException("Muscle groups cannot be null or empty");
         } else {
+            Set<MuscleGroup> muscleGroups = request.getMuscleGroupIds().stream()
+                    .map(id -> muscleGroupRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Muscle group with ID " + id + " not found")))
+                    .collect(Collectors.toSet());
             exercise.setMuscleGroups(muscleGroups);
         }
-        ExerciseDTO createdExercise = convertToExerciseDTO(exerciseRepository.save(exercise));
+        ExerciseCreationDTO createdExercise = convertToExerciseCreationDTO(exerciseRepository.save(exercise));
         logger.info("Exercise created successfully: {}", createdExercise);
         return createdExercise;
     }
@@ -130,11 +137,11 @@ public class AdminService {
         return userDTO;
     }
 
-    private ExerciseDTO convertToExerciseDTO(Exercise exercise) {
-        ExerciseDTO exerciseDTO = new ExerciseDTO();
+    private ExerciseCreationDTO convertToExerciseCreationDTO(Exercise exercise) {
+        ExerciseCreationDTO exerciseDTO = new ExerciseCreationDTO();
         exerciseDTO.setExerciseId(exercise.getExerciseId());
         exerciseDTO.setName(exercise.getName());
-        exerciseDTO.setMuscleGroups(exercise.getMuscleGroups());
+        exerciseDTO.setMuscleGroupIds(exercise.getMuscleGroups().stream().map(MuscleGroup::getMuscleGroupId).collect(Collectors.toSet()));
         return exerciseDTO;
     }
 

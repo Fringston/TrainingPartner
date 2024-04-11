@@ -1,5 +1,6 @@
 package com.fredrikkodar.TrainingPartner.controller;
 
+import com.fredrikkodar.TrainingPartner.dto.ExerciseCreationDTO;
 import com.fredrikkodar.TrainingPartner.dto.ExerciseDTO;
 import com.fredrikkodar.TrainingPartner.dto.UserDTO;
 import com.fredrikkodar.TrainingPartner.entities.Exercise;
@@ -73,10 +74,10 @@ public class AdminController {
     private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
     @PostMapping("/exercise")
-    public ResponseEntity<ExerciseDTO> createExercise(@RequestBody ExerciseDTO request) {
+    public ResponseEntity<ExerciseCreationDTO> createExercise(@RequestBody ExerciseCreationDTO request) {
         logger.info("Received request to create exercise: {}", request);
         try {
-            ExerciseDTO exercise = adminService.createExercise(request.getName(), request.getMuscleGroups());
+            ExerciseCreationDTO exercise = adminService.createExercise(request);
             logger.info("Exercise created successfully: {}", exercise);
             return new ResponseEntity<>(exercise, HttpStatus.CREATED);
         } catch (ExerciseAlreadyExistsException e) {

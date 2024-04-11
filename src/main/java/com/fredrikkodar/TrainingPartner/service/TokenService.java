@@ -29,13 +29,15 @@ public class TokenService {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(""));
 
-        User user = (User) auth.getPrincipal();
+        //User user = (User) auth.getPrincipal();
+        String username = auth.getName();
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .subject("self")
                 .issuedAt(now)
-                .subject(auth.getName())
-                .claim("userId", user.getUserId())
+                //.subject(auth.getName())
+                .subject(username)
+                //.claim("userId", user.getUserId())
                 .claim("roles", scope)
                 .build();
         return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();

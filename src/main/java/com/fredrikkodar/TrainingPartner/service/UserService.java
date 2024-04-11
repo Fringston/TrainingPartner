@@ -47,8 +47,6 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        System.out.println("In the User Detail Service");
-
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found."));
     }
@@ -159,23 +157,6 @@ public class UserService implements UserDetailsService {
         userMaxWeightRepository.deleteByUser_UserIdAndExercise_ExerciseId(userId, exerciseId);
     }
 
-    public MaxWeightDTO convertToWeightDTO(UserMaxWeight userMaxWeight) {
-        MaxWeightDTO dto = new MaxWeightDTO();
-        dto.setUserId(userMaxWeight.getUser().getUserId());
-        dto.setExerciseId(userMaxWeight.getExercise().getExerciseId());
-        dto.setMaxWeight(userMaxWeight.getMaxWeight());
-        dto.setUsername(userMaxWeight.getUser().getUsername());
-        dto.setExerciseName(userMaxWeight.getExercise().getName());
-        return dto;
-    }
-
-    public UserDTO convertToUserDTO(User user) {
-        UserDTO userDTO = new UserDTO();
-        userDTO.setUserId(user.getUserId());
-        userDTO.setUsername(user.getUsername());
-        return userDTO;
-    }
-
     public List<ExerciseDTO> getExercisesFromOneMuscleGroup(Long muscleGroupId) {
         List<Exercise> exercises = exerciseRepository.findByMuscleGroups_MuscleGroupId(muscleGroupId);
         List<ExerciseDTO> exerciseDTOs = new ArrayList<>();
@@ -270,6 +251,23 @@ public class UserService implements UserDetailsService {
             default:
                 throw new IllegalArgumentException("Invalid number of reps and sets");
         }
+    }
+
+    private MaxWeightDTO convertToWeightDTO(UserMaxWeight userMaxWeight) {
+        MaxWeightDTO dto = new MaxWeightDTO();
+        dto.setUserId(userMaxWeight.getUser().getUserId());
+        dto.setExerciseId(userMaxWeight.getExercise().getExerciseId());
+        dto.setMaxWeight(userMaxWeight.getMaxWeight());
+        dto.setUsername(userMaxWeight.getUser().getUsername());
+        dto.setExerciseName(userMaxWeight.getExercise().getName());
+        return dto;
+    }
+
+    private UserDTO convertToUserDTO(User user) {
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUserId(user.getUserId());
+        userDTO.setUsername(user.getUsername());
+        return userDTO;
     }
 
 }

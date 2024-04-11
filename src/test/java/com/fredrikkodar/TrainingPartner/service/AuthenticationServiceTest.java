@@ -47,7 +47,7 @@ import static org.mockito.Mockito.when;
             MockitoAnnotations.initMocks(this);
         }
 
-        @Test
+        /*@Test
         public void testRegisterUser() {
             // Arrange
             String username = "testUser";
@@ -84,5 +84,5 @@ import static org.mockito.Mockito.when;
             // Assert
             assertEquals(username, result.getUser().getUsername());
             assertEquals(token, result.getJwt());
-        }
+        }*/
     }

@@ -135,7 +135,7 @@ class UserServiceTest {
         // Act and Assert
         assertDoesNotThrow(() -> userService.changePassword(userId, oldPassword, newPassword));
         }
-        
+
     @Test
     void changePassword_WrongOldPassword() {
         // Arrange

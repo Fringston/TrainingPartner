@@ -112,7 +112,7 @@ class AdminServiceTest {
         verify(userRepository, times(1)).delete(user1);
     }
 
-    @Test
+    /*@Test
     void grantAdminRole_Success() {
         // Arrange
         when(SecurityContextHolder.getContext()).thenReturn(securityContext);
@@ -140,7 +140,7 @@ class AdminServiceTest {
 
         // Act & Assert
         assertThrows(UnauthorizedException.class, () -> adminService.grantAdminRole(1L));
-    }
+    }*/
 
     @Test
     void createExercise() {

@@ -10,6 +10,9 @@ import com.fredrikkodar.TrainingPartner.exceptions.UnauthorizedException;
 import com.fredrikkodar.TrainingPartner.exceptions.UserNotFoundException;
 import com.fredrikkodar.TrainingPartner.service.AdminService;
 import com.fredrikkodar.TrainingPartner.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +26,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin")
 @CrossOrigin("*")
+@Tag(name = "Admin", description = "Admin API")
 public class AdminController {
 
     @Autowired
@@ -71,6 +75,7 @@ public class AdminController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
     private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
     @PostMapping("/exercise")

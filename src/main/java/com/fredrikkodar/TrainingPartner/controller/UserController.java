@@ -8,6 +8,7 @@ import com.fredrikkodar.TrainingPartner.entities.User;
 import com.fredrikkodar.TrainingPartner.entities.UserMaxWeight;
 import com.fredrikkodar.TrainingPartner.exceptions.*;
 import com.fredrikkodar.TrainingPartner.service.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/user")
 @CrossOrigin("*")
+@Tag(name = "User", description = "User API")
 public class UserController {
 
     @Autowired

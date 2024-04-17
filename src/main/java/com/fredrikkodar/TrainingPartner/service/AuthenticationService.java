@@ -3,6 +3,7 @@ package com.fredrikkodar.TrainingPartner.service;
 import com.fredrikkodar.TrainingPartner.dto.LoginResponseDTO;
 import com.fredrikkodar.TrainingPartner.entities.Role;
 import com.fredrikkodar.TrainingPartner.entities.User;
+import com.fredrikkodar.TrainingPartner.exceptions.UserAlreadyExistsException;
 import com.fredrikkodar.TrainingPartner.repository.RoleRepository;
 import com.fredrikkodar.TrainingPartner.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -39,6 +40,10 @@ public class AuthenticationService {
        String passwordPattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$";
        Pattern pattern = Pattern.compile(passwordPattern);
        Matcher matcher = pattern.matcher(password);
+
+       if (userRepository.findByUsername(username).isPresent()) {
+           throw new UserAlreadyExistsException("Username already exists"
+       }
 
        if (!matcher.matches()) {
               throw new IllegalArgumentException("Password must contain at least one digit, one lowercase letter, one uppercase letter, one special character and be at least 8 characters long");

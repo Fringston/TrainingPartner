@@ -146,7 +146,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/exercises/{userId}/{numberOfExercises}")
+    @GetMapping("/exercise/{userId}/{numberOfExercises}")
     public ResponseEntity<List<ExerciseDTO>> getRandomWorkout(@PathVariable Long userId, @PathVariable int numberOfExercises) {
         try {
             List<Exercise> allExercises = exerciseRepository.findAll();
@@ -162,6 +162,21 @@ public class UserController {
             }
 
             List<ExerciseDTO> selectedExercises = userService.selectRandomExercises(allExerciseDTOs, numberOfExercises);
+            for (ExerciseDTO exercise : selectedExercises) {
+                if (userService.checkIfMaxWeightExists(userId, exercise.getExerciseId())) {
+                    String setsAndReps = userService.selectSetsAndReps(exercise);
+                    double percentage = userService.calculatePercentage(setsAndReps);
+                    double maxWeight = userService.getMaxWeight(userId, exercise.getExerciseId()).getMaxWeight();
+                    double suggestedWeight = maxWeight * percentage;
+                    double roundedSuggestedWeight = Math.round(suggestedWeight * 10) / 10.0;
+                    exercise.setSuggestedWeight(String.valueOf(roundedSuggestedWeight));
+                    exercise.setSetsAndReps(setsAndReps);
+                } else if (!userService.checkIfMaxWeightExists(userId, exercise.getExerciseId())) {
+                    String setsAndReps = userService.selectSetsAndReps(exercise);
+                    exercise.generalSuggestedWeight();
+                    exercise.setSetsAndReps(setsAndReps);
+                }
+            }
 
             return new ResponseEntity<>(selectedExercises, HttpStatus.OK);
         } catch (Exception e) {

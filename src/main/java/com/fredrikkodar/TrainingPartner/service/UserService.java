@@ -4,6 +4,7 @@ import com.fredrikkodar.TrainingPartner.dto.ExerciseDTO;
 import com.fredrikkodar.TrainingPartner.dto.MaxWeightDTO;
 import com.fredrikkodar.TrainingPartner.dto.UserDTO;
 import com.fredrikkodar.TrainingPartner.entities.Exercise;
+import com.fredrikkodar.TrainingPartner.entities.MuscleGroup;
 import com.fredrikkodar.TrainingPartner.entities.User;
 import com.fredrikkodar.TrainingPartner.entities.UserMaxWeight;
 import com.fredrikkodar.TrainingPartner.exceptions.ExerciseNotFoundException;
@@ -29,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -41,6 +43,8 @@ public class UserService implements UserDetailsService {
     private UserMaxWeightRepository userMaxWeightRepository;
     @Autowired
     private PasswordEncoder encoder;
+    @Autowired
+    private MuscleGroup muscleGroup;
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
@@ -191,7 +195,6 @@ public class UserService implements UserDetailsService {
     }
 
     public String selectSetsAndReps(ExerciseDTO exerciseDTO) {
-        ExerciseDTO exercise = new ExerciseDTO();
         int reps;
         int sets;
         String[] possibleRepsAndSets = {"3x12", "4x10", "5x8", "6x6", "5x5", "6x4", "4x2"};
@@ -254,13 +257,13 @@ public class UserService implements UserDetailsService {
     }
 
     private MaxWeightDTO convertToWeightDTO(UserMaxWeight userMaxWeight) {
-        MaxWeightDTO dto = new MaxWeightDTO();
-        dto.setUserId(userMaxWeight.getUser().getUserId());
-        dto.setExerciseId(userMaxWeight.getExercise().getExerciseId());
-        dto.setMaxWeight(userMaxWeight.getMaxWeight());
-        dto.setUsername(userMaxWeight.getUser().getUsername());
-        dto.setExerciseName(userMaxWeight.getExercise().getName());
-        return dto;
+        MaxWeightDTO maxWeightDTO = new MaxWeightDTO();
+        maxWeightDTO.setUserId(userMaxWeight.getUser().getUserId());
+        maxWeightDTO.setExerciseId(userMaxWeight.getExercise().getExerciseId());
+        maxWeightDTO.setMaxWeight(userMaxWeight.getMaxWeight());
+        maxWeightDTO.setUsername(userMaxWeight.getUser().getUsername());
+        maxWeightDTO.setExerciseName(userMaxWeight.getExercise().getName());
+        return maxWeightDTO;
     }
 
     private UserDTO convertToUserDTO(User user) {
@@ -268,6 +271,19 @@ public class UserService implements UserDetailsService {
         userDTO.setUserId(user.getUserId());
         userDTO.setUsername(user.getUsername());
         return userDTO;
+    }
+
+    public ExerciseDTO convertToExerciseDTO(Exercise exercise) {
+        ExerciseDTO exerciseDTO = new ExerciseDTO();
+        exerciseDTO.setExerciseId(exercise.getExerciseId());
+        exerciseDTO.setName(exercise.getName());
+
+        // Convert Set<MuscleGroup> to Set<Long>
+        Set<Long> muscleGroupIds = exercise.getMuscleGroups().stream()
+                .map(MuscleGroup::getMuscleGroupId)
+                .collect(Collectors.toSet());
+        exerciseDTO.setMuscleGroupId(muscleGroupIds);
+        return exerciseDTO;
     }
 
 }

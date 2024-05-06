@@ -42,7 +42,7 @@ public class AuthenticationService {
        Matcher matcher = pattern.matcher(password);
 
        if (userRepository.findByUsername(username).isPresent()) {
-           throw new UserAlreadyExistsException("Username already exists"
+           throw new UserAlreadyExistsException("Username already exists");
        }
 
        if (!matcher.matches()) {

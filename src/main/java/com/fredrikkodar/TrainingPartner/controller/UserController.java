@@ -4,19 +4,17 @@ import com.fredrikkodar.TrainingPartner.dto.ExerciseDTO;
 import com.fredrikkodar.TrainingPartner.dto.MaxWeightDTO;
 import com.fredrikkodar.TrainingPartner.dto.PasswordChangeDTO;
 import com.fredrikkodar.TrainingPartner.dto.UserDTO;
-import com.fredrikkodar.TrainingPartner.entities.User;
-import com.fredrikkodar.TrainingPartner.entities.UserMaxWeight;
+import com.fredrikkodar.TrainingPartner.entities.Exercise;
 import com.fredrikkodar.TrainingPartner.exceptions.*;
+import com.fredrikkodar.TrainingPartner.repository.ExerciseRepository;
 import com.fredrikkodar.TrainingPartner.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -27,6 +25,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private ExerciseRepository exerciseRepository;
 
     @GetMapping("/{userId}")
     public ResponseEntity<UserDTO> getUser(@PathVariable Long userId) {
@@ -69,7 +69,7 @@ public class UserController {
             return new ResponseEntity<>(dtos, HttpStatus.OK);
         } catch (UnauthorizedException e) {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
-        }  catch (MaxWeightNotFoundException e) {
+        } catch (MaxWeightNotFoundException e) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
@@ -82,7 +82,7 @@ public class UserController {
         } catch (ExerciseNotFoundException e) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         } catch (UnauthorizedException e) {
-                return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
         } catch (MaxWeightAlreadyExistsException e) {
             return new ResponseEntity<>(null, HttpStatus.CONFLICT);
         }
@@ -108,7 +108,7 @@ public class UserController {
     }
 
     @DeleteMapping("/maxweight/{userId}/{exerciseId}")
-    public ResponseEntity<String> deleteMaxWeight (@PathVariable Long userId, @PathVariable Long exerciseId){
+    public ResponseEntity<String> deleteMaxWeight(@PathVariable Long userId, @PathVariable Long exerciseId) {
         try {
             userService.deleteMaxWeight(userId, exerciseId);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -118,7 +118,7 @@ public class UserController {
     }
 
     @GetMapping("/exercise/{userId}/{muscleGroupId}/{numberOfExercises}")
-    public ResponseEntity<List<ExerciseDTO>> getExercise(@PathVariable Long userId, @PathVariable Long muscleGroupId, @PathVariable int numberOfExercises) {
+    public ResponseEntity<List<ExerciseDTO>> getWorkout(@PathVariable Long userId, @PathVariable Long muscleGroupId, @PathVariable int numberOfExercises) {
         try {
             List<ExerciseDTO> exercises = userService.getExercisesFromOneMuscleGroup(muscleGroupId);
             List<ExerciseDTO> selectedExercises = userService.selectRandomExercises(exercises, numberOfExercises);
@@ -146,4 +146,28 @@ public class UserController {
         }
     }
 
+    @GetMapping("/exercises/{userId}/{numberOfExercises}")
+    public ResponseEntity<List<ExerciseDTO>> getRandomWorkout(@PathVariable Long userId, @PathVariable int numberOfExercises) {
+        try {
+            List<Exercise> allExercises = exerciseRepository.findAll();
+            List<ExerciseDTO> allExerciseDTOs = new ArrayList<>();
+
+            for (Exercise exercise : allExercises) {
+                ExerciseDTO dto = userService.convertToExerciseDTO(exercise);
+                allExerciseDTOs.add(dto);
+            }
+
+            if (numberOfExercises > allExerciseDTOs.size()) {
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
+
+            List<ExerciseDTO> selectedExercises = userService.selectRandomExercises(allExerciseDTOs, numberOfExercises);
+
+            return new ResponseEntity<>(selectedExercises, HttpStatus.OK);
+        } catch (Exception e) {
+            // Handle exception
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
+

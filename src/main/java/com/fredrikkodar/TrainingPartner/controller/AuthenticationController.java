@@ -20,11 +20,6 @@ public class AuthenticationController {
     @Autowired
     private AuthenticationService authenticationService;
 
-    /*@PostMapping("/register")
-    public User registerUser(@RequestBody RegistrationDTO body) {
-        return authenticationService.registerUser(body.getUsername(), body.getPassword());
-    }*/
-
     @PostMapping("/register")
     public ResponseEntity<User> registerUser(@RequestBody RegistrationDTO body) {
         try {

@@ -165,7 +165,6 @@ public class UserController {
 
             return new ResponseEntity<>(selectedExercises, HttpStatus.OK);
         } catch (Exception e) {
-            // Handle exception
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

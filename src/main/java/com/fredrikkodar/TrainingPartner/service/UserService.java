@@ -12,6 +12,7 @@ import com.fredrikkodar.TrainingPartner.exceptions.MaxWeightAlreadyExistsExcepti
 import com.fredrikkodar.TrainingPartner.exceptions.MaxWeightNotFoundException;
 import com.fredrikkodar.TrainingPartner.exceptions.UnauthorizedException;
 import com.fredrikkodar.TrainingPartner.repository.ExerciseRepository;
+import com.fredrikkodar.TrainingPartner.repository.MuscleGroupRepository;
 import com.fredrikkodar.TrainingPartner.repository.UserMaxWeightRepository;
 import com.fredrikkodar.TrainingPartner.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,7 @@ public class UserService implements UserDetailsService {
     @Autowired
     private PasswordEncoder encoder;
     @Autowired
-    private MuscleGroup muscleGroup;
+    private MuscleGroupRepository muscleGroup;
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 

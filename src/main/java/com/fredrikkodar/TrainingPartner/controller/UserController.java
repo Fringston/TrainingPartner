@@ -125,7 +125,8 @@ public class UserController {
                     double percentage = userService.calculatePercentage(setsAndReps);
                     double maxWeight = userService.getMaxWeight(userId, exercise.getExerciseId()).getMaxWeight();
                     double suggestedWeight = maxWeight * percentage;
-                    exercise.setSuggestedWeight(String.valueOf(suggestedWeight));
+                    double roundedSuggestedWeight = Math.round(suggestedWeight * 10 / 10.0);
+                    exercise.setSuggestedWeight(String.valueOf(roundedSuggestedWeight));
                     exercise.setSetsAndReps(setsAndReps);
                 } else if (!userService.checkIfMaxWeightExists(userId, exercise.getExerciseId())) {
                     String setsAndReps = userService.selectSetsAndReps(exercise);

@@ -1,9 +1,6 @@
 package com.fredrikkodar.TrainingPartner.controller;
 
-import com.fredrikkodar.TrainingPartner.dto.ExerciseDTO;
-import com.fredrikkodar.TrainingPartner.dto.MaxWeightDTO;
-import com.fredrikkodar.TrainingPartner.dto.PasswordChangeDTO;
-import com.fredrikkodar.TrainingPartner.dto.UserDTO;
+import com.fredrikkodar.TrainingPartner.dto.*;
 import com.fredrikkodar.TrainingPartner.entities.Exercise;
 import com.fredrikkodar.TrainingPartner.exceptions.*;
 import com.fredrikkodar.TrainingPartner.repository.ExerciseRepository;
@@ -139,7 +136,7 @@ public class UserController {
             return new ResponseEntity<>(selectedExercises, HttpStatus.OK);
         } catch (UnauthorizedException e) {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
-        } catch (ExerciseNotFoundException | MuscleGroupNotFound e) {
+        } catch (ExerciseNotFoundException | MuscleGroupNotFoundException e) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -181,6 +178,16 @@ public class UserController {
             return new ResponseEntity<>(selectedExercises, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/musclegroups")
+    public ResponseEntity<List<MuscleGroupDTO>> getAllMuscleGroups(){
+        try {
+            List<MuscleGroupDTO> muscleGroups = userService.getAllMuscleGroups();
+            return new ResponseEntity<>(muscleGroups, HttpStatus.OK);
+        } catch (MuscleGroupNotFoundException e) {
+            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
         }
     }
 }

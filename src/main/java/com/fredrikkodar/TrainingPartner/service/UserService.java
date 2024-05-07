@@ -2,15 +2,13 @@ package com.fredrikkodar.TrainingPartner.service;
 
 import com.fredrikkodar.TrainingPartner.dto.ExerciseDTO;
 import com.fredrikkodar.TrainingPartner.dto.MaxWeightDTO;
+import com.fredrikkodar.TrainingPartner.dto.MuscleGroupDTO;
 import com.fredrikkodar.TrainingPartner.dto.UserDTO;
 import com.fredrikkodar.TrainingPartner.entities.Exercise;
 import com.fredrikkodar.TrainingPartner.entities.MuscleGroup;
 import com.fredrikkodar.TrainingPartner.entities.User;
 import com.fredrikkodar.TrainingPartner.entities.UserMaxWeight;
-import com.fredrikkodar.TrainingPartner.exceptions.ExerciseNotFoundException;
-import com.fredrikkodar.TrainingPartner.exceptions.MaxWeightAlreadyExistsException;
-import com.fredrikkodar.TrainingPartner.exceptions.MaxWeightNotFoundException;
-import com.fredrikkodar.TrainingPartner.exceptions.UnauthorizedException;
+import com.fredrikkodar.TrainingPartner.exceptions.*;
 import com.fredrikkodar.TrainingPartner.repository.ExerciseRepository;
 import com.fredrikkodar.TrainingPartner.repository.MuscleGroupRepository;
 import com.fredrikkodar.TrainingPartner.repository.UserMaxWeightRepository;
@@ -45,7 +43,7 @@ public class UserService implements UserDetailsService {
     @Autowired
     private PasswordEncoder encoder;
     @Autowired
-    private MuscleGroupRepository muscleGroup;
+    private MuscleGroupRepository muscleGroupRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
@@ -177,6 +175,19 @@ public class UserService implements UserDetailsService {
         return exerciseDTOs;
     }
 
+    public List<MuscleGroupDTO> getAllMuscleGroups() {
+        List<MuscleGroup> muscleGroups = muscleGroupRepository.findAll();
+        if (muscleGroupRepository == null) {
+            throw new MuscleGroupNotFoundException("No musclegroups found.");
+        } else {
+            List<MuscleGroupDTO> muscleGroupDTOs = new ArrayList<>();
+            for (MuscleGroup muscleGroup : muscleGroups) {
+                muscleGroupDTOs.add(convertToMuscleGroupDTO(muscleGroup));
+            }
+            return muscleGroupDTOs;
+        }
+    }
+
     public List<ExerciseDTO> selectRandomExercises(List<ExerciseDTO> exercises, int numberOfExercises) {
         if (numberOfExercises > exercises.size()) {
             throw new IllegalArgumentException("Number of exercises to select cannot be greater than the total number of exercises");
@@ -285,6 +296,18 @@ public class UserService implements UserDetailsService {
                 .collect(Collectors.toSet());
         exerciseDTO.setMuscleGroupId(muscleGroupIds);
         return exerciseDTO;
+    }
+
+    public MuscleGroupDTO convertToMuscleGroupDTO(MuscleGroup muscleGroup) {
+        MuscleGroupDTO muscleGroupDTO = new MuscleGroupDTO();
+        muscleGroupDTO.setMuscleGroupId(muscleGroup.getMuscleGroupId());
+        muscleGroupDTO.setName(muscleGroup.getName());
+        List<ExerciseDTO> exerciseDTOs = new ArrayList<>();
+        for (Exercise exercise : muscleGroup.getExercises()) {
+            exerciseDTOs.add(convertToExerciseDTO(exercise));
+        }
+        muscleGroupDTO.setExercises(exerciseDTOs);
+        return muscleGroupDTO;
     }
 
 }

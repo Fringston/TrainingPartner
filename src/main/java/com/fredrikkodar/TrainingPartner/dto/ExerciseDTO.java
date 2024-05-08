@@ -1,6 +1,5 @@
 package com.fredrikkodar.TrainingPartner.dto;
 
-import com.fredrikkodar.TrainingPartner.entities.MuscleGroup;
 import lombok.Data;
 
 import java.util.Set;
@@ -11,6 +10,7 @@ public class ExerciseDTO {
     private Long exerciseId;
     private String name;
     private Set<Long> muscleGroupId;
+    private boolean possibleMaxWeight;
     private String suggestedWeight;
     private String setsAndReps;
 

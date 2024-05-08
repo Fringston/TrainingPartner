@@ -160,6 +160,24 @@ public class UserService implements UserDetailsService {
         userMaxWeightRepository.deleteByUser_UserIdAndExercise_ExerciseId(userId, exerciseId);
     }
 
+    public List<ExerciseDTO> getExercisesWithPossibleMaxWeight() {
+        List<Exercise> allExercises = exerciseRepository.findAll();
+        List<ExerciseDTO> exercisesWithPossibleMaxWeight = new ArrayList<>();
+        for (Exercise exercise : allExercises) {
+            if (exercise.isPossibleMaxWeight()) {
+                ExerciseDTO exerciseDTOWithPossibleMaxWeight = new ExerciseDTO();
+                exerciseDTOWithPossibleMaxWeight.setExerciseId(exercise.getExerciseId());
+                exerciseDTOWithPossibleMaxWeight.setName(exercise.getName());
+                exerciseDTOWithPossibleMaxWeight.setPossibleMaxWeight(true);
+                exerciseDTOWithPossibleMaxWeight.setMuscleGroupId(exercise.getMuscleGroups().stream()
+                        .map(MuscleGroup::getMuscleGroupId)
+                        .collect(Collectors.toSet()));
+                exercisesWithPossibleMaxWeight.add(exerciseDTOWithPossibleMaxWeight);
+            }
+        }
+        return exercisesWithPossibleMaxWeight;
+    }
+
     public List<ExerciseDTO> getExercisesFromOneMuscleGroup(Long muscleGroupId) {
         List<Exercise> exercises = exerciseRepository.findByMuscleGroups_MuscleGroupId(muscleGroupId);
         List<ExerciseDTO> exerciseDTOs = new ArrayList<>();
@@ -289,6 +307,7 @@ public class UserService implements UserDetailsService {
         ExerciseDTO exerciseDTO = new ExerciseDTO();
         exerciseDTO.setExerciseId(exercise.getExerciseId());
         exerciseDTO.setName(exercise.getName());
+        exerciseDTO.setPossibleMaxWeight(exercise.isPossibleMaxWeight());
 
         // Convert Set<MuscleGroup> to Set<Long>
         Set<Long> muscleGroupIds = exercise.getMuscleGroups().stream()

@@ -114,6 +114,16 @@ public class UserController {
         }
     }
 
+    @GetMapping("/exercises/maxweight/possible")
+    public ResponseEntity<List<ExerciseDTO>> getExercisesWithPossibleMaxWeight() {
+        try {
+            List<ExerciseDTO> exercises = userService.getExercisesWithPossibleMaxWeight();
+            return new ResponseEntity<>(exercises, HttpStatus.OK);
+        } catch (ExerciseNotFoundException e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
+
     @GetMapping("/exercise/{userId}/{muscleGroupId}/{numberOfExercises}")
     public ResponseEntity<List<ExerciseDTO>> getWorkout(@PathVariable Long userId, @PathVariable Long muscleGroupId, @PathVariable int numberOfExercises) {
         try {

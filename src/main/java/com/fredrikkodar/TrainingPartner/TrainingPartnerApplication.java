@@ -46,7 +46,8 @@ public class TrainingPartnerApplication {
 	CommandLineRunner initMuscleGroups(MuscleGroupRepository muscleGroupRepository) {
 		return args -> {
 			List<MuscleGroup> muscleGroups = new ArrayList<>();
-			if (!muscleGroupRepository.existsByName("Arms")) muscleGroups.add(new MuscleGroup("Arms"));
+			if (!muscleGroupRepository.existsByName("Biceps")) muscleGroups.add(new MuscleGroup("Biceps"));
+			if (!muscleGroupRepository.existsByName("Triceps")) muscleGroups.add(new MuscleGroup("Triceps"));
 			if (!muscleGroupRepository.existsByName("Chest")) muscleGroups.add(new MuscleGroup("Chest"));
 			if (!muscleGroupRepository.existsByName("Shoulders")) muscleGroups.add(new MuscleGroup("Shoulders"));
 			if (!muscleGroupRepository.existsByName("Upper back")) muscleGroups.add(new MuscleGroup("Upper back"));
@@ -63,26 +64,49 @@ public class TrainingPartnerApplication {
 	CommandLineRunner initExercises(MuscleGroupRepository muscleGroupRepository, ExerciseRepository exerciseRepository) {
 
 		return args -> {
-			if (!exerciseRepository.existsByName("Bicep curl")) {
-				Exercise exercise = new Exercise("Bicep curl");
-				muscleGroupRepository.findByName("Arms")
+			if (!exerciseRepository.existsByName("Barbell bicep curl")) {
+				Exercise exercise = new Exercise("Barbell Bicep curl");
+				exercise.setPossibleMaxWeight(false);
+				muscleGroupRepository.findByName("Biceps")
 						.ifPresentOrElse(
 								muscleGroup -> exercise.getMuscleGroups().add(muscleGroup),
-								() -> handleMissingMuscleGroup("Arms")
+								() -> handleMissingMuscleGroup("Biceps")
 						);
 				exerciseRepository.save(exercise);
 			}
-			if (!exerciseRepository.existsByName("Triceps extension")) {
-				Exercise exercise = new Exercise("Triceps extension");
-				muscleGroupRepository.findByName("Arms")
+				if (!exerciseRepository.existsByName("Dumbbell bicep curl")) {
+					Exercise exercise = new Exercise("Dumbbell bicep curl");
+					exercise.setPossibleMaxWeight(false);
+					muscleGroupRepository.findByName("Biceps")
+							.ifPresentOrElse(
+									muscleGroup -> exercise.getMuscleGroups().add(muscleGroup),
+									() -> handleMissingMuscleGroup("Biceps")
+							);
+					exerciseRepository.save(exercise);
+				}
+			if (!exerciseRepository.existsByName("Skull crusher")) {
+				Exercise exercise = new Exercise("Skull crusher");
+				exercise.setPossibleMaxWeight(false);
+				muscleGroupRepository.findByName("Triceps")
 						.ifPresentOrElse(
 								muscleGroup -> exercise.getMuscleGroups().add(muscleGroup),
-								() -> handleMissingMuscleGroup("Arms")
+								() -> handleMissingMuscleGroup("Triceps")
 						);
 				exerciseRepository.save(exercise);
 			}
-			if (!exerciseRepository.existsByName("Bench press")) {
-				Exercise exercise = new Exercise("Bench press");
+			if (!exerciseRepository.existsByName("Dips")) {
+				Exercise exercise = new Exercise("Dips");
+				exercise.setPossibleMaxWeight(true);
+				muscleGroupRepository.findByName("Triceps")
+						.ifPresentOrElse(
+								muscleGroup -> exercise.getMuscleGroups().add(muscleGroup),
+								() -> handleMissingMuscleGroup("Triceps")
+						);
+				exerciseRepository.save(exercise);
+			}
+			if (!exerciseRepository.existsByName("Barbell bench press")) {
+				Exercise exercise = new Exercise("Barbell bench press");
+				exercise.setPossibleMaxWeight(true);
 				muscleGroupRepository.findByName("Chest")
 						.ifPresentOrElse(
 								muscleGroup -> exercise.getMuscleGroups().add(muscleGroup),
@@ -90,8 +114,19 @@ public class TrainingPartnerApplication {
 						);
 				exerciseRepository.save(exercise);
 			}
-			if (!exerciseRepository.existsByName("Shoulder press")) {
-				Exercise exercise = new Exercise("Shoulder press");
+			if (!exerciseRepository.existsByName("Dumbbell bench press")) {
+				Exercise exercise = new Exercise("Dumbbell bench press");
+				exercise.setPossibleMaxWeight(false);
+				muscleGroupRepository.findByName("Chest")
+						.ifPresentOrElse(
+								muscleGroup -> exercise.getMuscleGroups().add(muscleGroup),
+								() -> handleMissingMuscleGroup("Chest")
+						);
+				exerciseRepository.save(exercise);
+			}
+			if (!exerciseRepository.existsByName("Barbell shoulder press")) {
+				Exercise exercise = new Exercise("Barbell shoulder press");
+				exercise.setPossibleMaxWeight(true);
 				muscleGroupRepository.findByName("Shoulders")
 						.ifPresentOrElse(
 								muscleGroup -> exercise.getMuscleGroups().add(muscleGroup),
@@ -99,8 +134,50 @@ public class TrainingPartnerApplication {
 						);
 				exerciseRepository.save(exercise);
 			}
+			if (!exerciseRepository.existsByName("Dumbbell shoulder press")) {
+				Exercise exercise = new Exercise("Dumbbell shoulder press");
+				exercise.setPossibleMaxWeight(false);
+				muscleGroupRepository.findByName("Shoulders")
+						.ifPresentOrElse(
+								muscleGroup -> exercise.getMuscleGroups().add(muscleGroup),
+								() -> handleMissingMuscleGroup("Shoulders")
+						);
+				exerciseRepository.save(exercise);
+			}
+			if (!exerciseRepository.existsByName("Dumbbell lateral raise")) {
+				Exercise exercise = new Exercise("Dumbbell lateral raise");
+				exercise.setPossibleMaxWeight(false);
+				muscleGroupRepository.findByName("Shoulders")
+						.ifPresentOrElse(
+								muscleGroup -> exercise.getMuscleGroups().add(muscleGroup),
+								() -> handleMissingMuscleGroup("Shoulders")
+						);
+				exerciseRepository.save(exercise);
+			}
+			if (!exerciseRepository.existsByName("Barbell push press")) {
+				Exercise exercise = new Exercise("Barbell push press");
+				exercise.setPossibleMaxWeight(true);
+				muscleGroupRepository.findByName("Shoulders")
+						.ifPresentOrElse(
+								muscleGroup -> exercise.getMuscleGroups().add(muscleGroup),
+								() -> handleMissingMuscleGroup("Shoulders")
+						);
+				exerciseRepository.save(exercise);
+			}
+			if (!exerciseRepository.existsByName("Handstand push up")) {
+				Exercise exercise = new Exercise("Handstand push up");
+				exercise.setPossibleMaxWeight(false);
+				muscleGroupRepository.findByName("Shoulders")
+						.ifPresentOrElse(
+								muscleGroup -> exercise.getMuscleGroups().add(muscleGroup),
+								() -> handleMissingMuscleGroup("Shoulders")
+						);
+				exerciseRepository.save(exercise);
+			}
+
 			if (!exerciseRepository.existsByName("Pull-up")) {
 				Exercise exercise = new Exercise("Pull-up");
+				exercise.setPossibleMaxWeight(true);
 				muscleGroupRepository.findByName("Upper back")
 						.ifPresentOrElse(
 								muscleGroup -> exercise.getMuscleGroups().add(muscleGroup),
@@ -110,6 +187,27 @@ public class TrainingPartnerApplication {
 			}
 			if (!exerciseRepository.existsByName("Deadlift")) {
 				Exercise exercise = new Exercise("Deadlift");
+				exercise.setPossibleMaxWeight(true);
+				muscleGroupRepository.findByName("Lower back")
+						.ifPresentOrElse(
+								muscleGroup -> exercise.getMuscleGroups().add(muscleGroup),
+								() -> handleMissingMuscleGroup("Lower back")
+						);
+				exerciseRepository.save(exercise);
+			}
+			if (!exerciseRepository.existsByName("Romanian deadlift")) {
+				Exercise exercise = new Exercise("Romanian deadlift");
+				exercise.setPossibleMaxWeight(false);
+				muscleGroupRepository.findByName("Lower back")
+						.ifPresentOrElse(
+								muscleGroup -> exercise.getMuscleGroups().add(muscleGroup),
+								() -> handleMissingMuscleGroup("Lower back")
+						);
+				exerciseRepository.save(exercise);
+			}
+			if (!exerciseRepository.existsByName("Bent over row")) {
+				Exercise exercise = new Exercise("Bent over row");
+				exercise.setPossibleMaxWeight(false);
 				muscleGroupRepository.findByName("Lower back")
 						.ifPresentOrElse(
 								muscleGroup -> exercise.getMuscleGroups().add(muscleGroup),
@@ -119,6 +217,7 @@ public class TrainingPartnerApplication {
 			}
 			if (!exerciseRepository.existsByName("Hip thrust")) {
 				Exercise exercise = new Exercise("Hip thrust");
+				exercise.setPossibleMaxWeight(true);
 				muscleGroupRepository.findByName("Glutes")
 						.ifPresentOrElse(
 								muscleGroup -> exercise.getMuscleGroups().add(muscleGroup),
@@ -128,6 +227,7 @@ public class TrainingPartnerApplication {
 			}
 			if (!exerciseRepository.existsByName("Back squat")) {
 				Exercise exercise = new Exercise("Back squat");
+				exercise.setPossibleMaxWeight(true);
 				muscleGroupRepository.findByName("Legs")
 						.ifPresentOrElse(
 								muscleGroup -> exercise.getMuscleGroups().add(muscleGroup),
@@ -137,6 +237,7 @@ public class TrainingPartnerApplication {
 			}
 			if (!exerciseRepository.existsByName("Front squat")) {
 				Exercise exercise = new Exercise("Front squat");
+				exercise.setPossibleMaxWeight(true);
 				muscleGroupRepository.findByName("Legs")
 						.ifPresentOrElse(
 								muscleGroup -> exercise.getMuscleGroups().add(muscleGroup),
@@ -144,8 +245,29 @@ public class TrainingPartnerApplication {
 						);
 				exerciseRepository.save(exercise);
 			}
-			if (!exerciseRepository.existsByName("Lunge")) {
-				Exercise exercise = new Exercise("Lunge");
+			if (!exerciseRepository.existsByName("Overhead squat")) {
+				Exercise exercise = new Exercise("Overhead squat");
+				exercise.setPossibleMaxWeight(true);
+				muscleGroupRepository.findByName("Legs")
+						.ifPresentOrElse(
+								muscleGroup -> exercise.getMuscleGroups().add(muscleGroup),
+								() -> handleMissingMuscleGroup("Legs")
+						);
+				exerciseRepository.save(exercise);
+			}
+			if (!exerciseRepository.existsByName("Dumbbell Lunges")) {
+				Exercise exercise = new Exercise("Dumbell Lunges");
+				exercise.setPossibleMaxWeight(false);
+				muscleGroupRepository.findByName("Legs")
+						.ifPresentOrElse(
+								muscleGroup -> exercise.getMuscleGroups().add(muscleGroup),
+								() -> handleMissingMuscleGroup("Legs")
+						);
+				exerciseRepository.save(exercise);
+			}
+			if (!exerciseRepository.existsByName("Dumbbell Bulgarian split squat")) {
+				Exercise exercise = new Exercise("Dumbbell Bulgarian split squat");
+				exercise.setPossibleMaxWeight(false);
 				muscleGroupRepository.findByName("Legs")
 						.ifPresentOrElse(
 								muscleGroup -> exercise.getMuscleGroups().add(muscleGroup),
@@ -155,6 +277,17 @@ public class TrainingPartnerApplication {
 			}
 			if (!exerciseRepository.existsByName("Sit up")) {
 				Exercise exercise = new Exercise("Sit up");
+				exercise.setPossibleMaxWeight(false);
+				muscleGroupRepository.findByName("Abs")
+						.ifPresentOrElse(
+								muscleGroup -> exercise.getMuscleGroups().add(muscleGroup),
+								() -> handleMissingMuscleGroup("Abs")
+						);
+				exerciseRepository.save(exercise);
+			}
+			if (!exerciseRepository.existsByName("Strict toes to bar")) {
+				Exercise exercise = new Exercise("Strict toes to bar");
+				exercise.setPossibleMaxWeight(false);
 				muscleGroupRepository.findByName("Abs")
 						.ifPresentOrElse(
 								muscleGroup -> exercise.getMuscleGroups().add(muscleGroup),

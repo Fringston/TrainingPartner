@@ -94,7 +94,7 @@ public class UserService implements UserDetailsService {
         return convertToWeightDTO(userMaxWeight);
     }
 
-    public List<MaxWeightDTO> getAllMaxWeights(Long userId) {
+    /*public List<MaxWeightDTO> getAllMaxWeights(Long userId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Long currentUserId = (Long) ((Jwt) auth.getPrincipal()).getClaims().get("userId");
         if (!currentUserId.equals(userId)) {
@@ -105,6 +105,23 @@ public class UserService implements UserDetailsService {
         for (UserMaxWeight userMaxWeight : allUserWeights) {
             allUserWeightsDTO.add(convertToWeightDTO(userMaxWeight));
         } if (allUserWeightsDTO.isEmpty()) {
+            throw new MaxWeightNotFoundException( "No max weights found");
+        }
+        return allUserWeightsDTO;
+    }*/
+
+    public List<MaxWeightDTO> getAllMaxWeights(Long userId) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Long currentUserId = (Long) ((Jwt) auth.getPrincipal()).getClaims().get("userId");
+        if (!currentUserId.equals(userId)) {
+            throw new UnauthorizedException("User is not authorized to modify this max weight");
+        }
+        List<UserMaxWeight> allUserWeights = userMaxWeightRepository.findByUser_UserId(userId);
+        List<MaxWeightDTO> allUserWeightsDTO = new ArrayList<>();
+        for (UserMaxWeight userMaxWeight : allUserWeights) {
+            allUserWeightsDTO.add(convertToWeightDTO(userMaxWeight));
+        }
+        if (allUserWeightsDTO.isEmpty()) {
             throw new MaxWeightNotFoundException( "No max weights found");
         }
         return allUserWeightsDTO;

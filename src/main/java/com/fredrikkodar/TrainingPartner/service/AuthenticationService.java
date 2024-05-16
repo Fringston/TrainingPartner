@@ -3,6 +3,7 @@ package com.fredrikkodar.TrainingPartner.service;
 import com.fredrikkodar.TrainingPartner.dto.LoginResponseDTO;
 import com.fredrikkodar.TrainingPartner.entities.Role;
 import com.fredrikkodar.TrainingPartner.entities.User;
+import com.fredrikkodar.TrainingPartner.exceptions.UnauthorizedException;
 import com.fredrikkodar.TrainingPartner.exceptions.UserAlreadyExistsException;
 import com.fredrikkodar.TrainingPartner.repository.RoleRepository;
 import com.fredrikkodar.TrainingPartner.repository.UserRepository;
@@ -42,7 +43,7 @@ public class AuthenticationService {
        Matcher matcher = pattern.matcher(password);
 
        if (userRepository.findByUsername(username).isPresent()) {
-           throw new UserAlreadyExistsException("Username already exists"
+           throw new UserAlreadyExistsException("Username already exists");
        }
 
        if (!matcher.matches()) {
@@ -57,6 +58,17 @@ public class AuthenticationService {
        return userRepository.save(new User(0L, username, encodedPassword, authorities));
        }
 
+    /*public LoginResponseDTO loginUser(String username, String password) {
+        try {
+            Authentication auth = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(username, password));
+            String token = tokenService.generateJwt(auth);
+            return new LoginResponseDTO(userRepository.findByUsername(username).get(), token);
+        } catch (UnauthorizedException e) {
+            return new LoginResponseDTO(null, "");
+        }
+    }*/
+
     public LoginResponseDTO loginUser(String username, String password) {
         try {
             Authentication auth = authenticationManager.authenticate(
@@ -64,7 +76,8 @@ public class AuthenticationService {
             String token = tokenService.generateJwt(auth);
             return new LoginResponseDTO(userRepository.findByUsername(username).get(), token);
         } catch (AuthenticationException e) {
-            return new LoginResponseDTO(null, "");
+            throw new AuthenticationException("Invalid username or password") {
+            };
         }
     }
 }

@@ -3,12 +3,14 @@ package com.fredrikkodar.TrainingPartner.controller;
 import com.fredrikkodar.TrainingPartner.dto.LoginResponseDTO;
 import com.fredrikkodar.TrainingPartner.dto.RegistrationDTO;
 import com.fredrikkodar.TrainingPartner.entities.User;
+import com.fredrikkodar.TrainingPartner.exceptions.UnauthorizedException;
 import com.fredrikkodar.TrainingPartner.exceptions.UserAlreadyExistsException;
 import com.fredrikkodar.TrainingPartner.service.AuthenticationService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,11 +21,6 @@ public class AuthenticationController {
 
     @Autowired
     private AuthenticationService authenticationService;
-
-    /*@PostMapping("/register")
-    public User registerUser(@RequestBody RegistrationDTO body) {
-        return authenticationService.registerUser(body.getUsername(), body.getPassword());
-    }*/
 
     @PostMapping("/register")
     public ResponseEntity<User> registerUser(@RequestBody RegistrationDTO body) {
@@ -38,8 +35,21 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
+    public ResponseEntity<LoginResponseDTO> loginUser(@RequestBody RegistrationDTO body) {
+        try {
+            LoginResponseDTO response = authenticationService.loginUser(body.getUsername(), body.getPassword());
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (AuthenticationException e) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /*@PostMapping("/login")
     public LoginResponseDTO loginUser(@RequestBody RegistrationDTO body) {
         return authenticationService.loginUser(body.getUsername(), body.getPassword());
-    }
+    }*/
+
 
 }

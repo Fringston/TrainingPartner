@@ -16,6 +16,7 @@ public class Exercise {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long exerciseId;
     private String name;
+    private boolean possibleMaxWeight;
 
     @ManyToMany
     @JoinTable(

@@ -45,11 +45,4 @@ public class AuthenticationController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-    /*@PostMapping("/login")
-    public LoginResponseDTO loginUser(@RequestBody RegistrationDTO body) {
-        return authenticationService.loginUser(body.getUsername(), body.getPassword());
-    }*/
-
-
 }

@@ -58,17 +58,6 @@ public class AuthenticationService {
        return userRepository.save(new User(0L, username, encodedPassword, authorities));
        }
 
-    /*public LoginResponseDTO loginUser(String username, String password) {
-        try {
-            Authentication auth = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(username, password));
-            String token = tokenService.generateJwt(auth);
-            return new LoginResponseDTO(userRepository.findByUsername(username).get(), token);
-        } catch (UnauthorizedException e) {
-            return new LoginResponseDTO(null, "");
-        }
-    }*/
-
     public LoginResponseDTO loginUser(String username, String password) {
         try {
             Authentication auth = authenticationManager.authenticate(

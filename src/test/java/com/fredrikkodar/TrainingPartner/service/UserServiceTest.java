@@ -69,6 +69,9 @@ class UserServiceTest {
         userMaxWeight.setUser(user);
         userMaxWeight.setExercise(exercise);
         userMaxWeight.setMaxWeight(100);
+
+        // Stub the findByUser_UserId method
+        when(userMaxWeightRepository.findByUser_UserId(userId)).thenReturn(Collections.singletonList(userMaxWeight));
     }
 
     @Test
@@ -197,7 +200,7 @@ class UserServiceTest {
         // Arrange
         List<UserMaxWeight> allUserWeights = new ArrayList<>();
         allUserWeights.add(userMaxWeight);
-        when(userMaxWeightRepository.findAll()).thenReturn(allUserWeights);
+        when(userMaxWeightRepository.findByUser_UserId(userId)).thenReturn(allUserWeights);
 
         // Mocking the authentication
         Authentication auth = mock(Authentication.class);
@@ -217,7 +220,7 @@ class UserServiceTest {
     @Test
     void getAllMaxWeights_Empty() {
         // Arrange
-        when(userMaxWeightRepository.findAll()).thenReturn(new ArrayList<>());
+        when(userMaxWeightRepository.findByUser_UserId(userId)).thenReturn(new ArrayList<>());
 
         // Mocking the authentication
         Authentication auth = mock(Authentication.class);

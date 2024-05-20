@@ -52,6 +52,7 @@ class UserServiceTest {
     private Long exerciseId;
     private Exercise exercise;
     private UserMaxWeight userMaxWeight;
+    private MuscleGroup muscleGroup;
 
     @BeforeEach
     public void setup() {
@@ -66,6 +67,11 @@ class UserServiceTest {
         exerciseId = 1L;
         exercise = new Exercise();
         exercise.setExerciseId(exerciseId);
+        exercise.setPossibleMaxWeight(true);
+
+        muscleGroup = new MuscleGroup();
+        muscleGroup.setMuscleGroupId(1L);
+        exercise.setMuscleGroups(Collections.singleton(muscleGroup));
 
         userMaxWeight = new UserMaxWeight();
         userMaxWeight.setUser(user);
@@ -74,6 +80,9 @@ class UserServiceTest {
 
         // Stub the findByUser_UserId method
         when(userMaxWeightRepository.findByUser_UserId(userId)).thenReturn(Collections.singletonList(userMaxWeight));
+
+        // Stub the findAll method of exerciseRepository
+        when(exerciseRepository.findAll()).thenReturn(Collections.singletonList(exercise));
     }
 
     @Test
@@ -467,5 +476,19 @@ class UserServiceTest {
         assertEquals(muscleGroup1.getName(), result.get(0).getName());
         assertEquals(muscleGroup2.getMuscleGroupId(), result.get(1).getMuscleGroupId());
         assertEquals(muscleGroup2.getName(), result.get(1).getName());
+    }
+    
+    @Test
+    void getExercisesWithPossibleMaxWeight() {
+        // Act
+        List<ExerciseDTO> result = userService.getExercisesWithPossibleMaxWeight();
+
+        // Assert
+        assertEquals(1, result.size());
+        ExerciseDTO resultExercise = result.get(0);
+        assertEquals(exercise.getExerciseId(), resultExercise.getExerciseId());
+        assertEquals(exercise.getName(), resultExercise.getName());
+        assertTrue(resultExercise.isPossibleMaxWeight());
+        assertTrue(resultExercise.getMuscleGroupId().contains(muscleGroup.getMuscleGroupId()));
     }
 }

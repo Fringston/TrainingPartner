@@ -18,14 +18,15 @@ I received help and inspiration from the following sources:
 
 ## Dependencies
 
-* [Spring Framework](https://mvnrepository.com/artifact/org.springframework.kafka/spring-kafka/3.0.11)
-* [Spring JPA](https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jpa/3.1.4)
-* [Spring Boot Starter Web](https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web/3.1.4)
-* [Spring Boot Starter Test](https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-test/3.1.4)
-* [Junit Jupiter 5](https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter/5.7.0)
-* [mySQL Connector](https://mvnrepository.com/artifact/mysql/mysql-connector-java/8.0.23)
-* [Mockito](https://mvnrepository.com/artifact/org.mockito/mockito-core/3.11.2)
-
+- [Spring Boot Starter Data JPA](https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jpa)
+- [Spring Boot Starter Web](https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web)
+- [Spring Boot DevTools](https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-devtools)
+- [MySQL Connector Java](https://mvnrepository.com/artifact/mysql/mysql-connector-java)
+- [Project Lombok](https://mvnrepository.com/artifact/org.projectlombok/lombok)
+- [Spring Boot Starter Test](https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-test)
+- [Spring Boot Starter Security](https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-security)
+- [Spring Boot Starter OAuth2 Resource Server](https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-oauth2-resource-server)
+- [Springdoc OpenAPI UI](https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-ui)
 
 ## License
 

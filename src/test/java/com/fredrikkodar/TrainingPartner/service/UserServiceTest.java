@@ -2,13 +2,16 @@ package com.fredrikkodar.TrainingPartner.service;
 
 import com.fredrikkodar.TrainingPartner.dto.ExerciseDTO;
 import com.fredrikkodar.TrainingPartner.dto.MaxWeightDTO;
+import com.fredrikkodar.TrainingPartner.dto.MuscleGroupDTO;
 import com.fredrikkodar.TrainingPartner.dto.UserDTO;
 import com.fredrikkodar.TrainingPartner.entities.Exercise;
+import com.fredrikkodar.TrainingPartner.entities.MuscleGroup;
 import com.fredrikkodar.TrainingPartner.entities.User;
 import com.fredrikkodar.TrainingPartner.entities.UserMaxWeight;
 import com.fredrikkodar.TrainingPartner.exceptions.MaxWeightAlreadyExistsException;
 import com.fredrikkodar.TrainingPartner.exceptions.MaxWeightNotFoundException;
 import com.fredrikkodar.TrainingPartner.repository.ExerciseRepository;
+import com.fredrikkodar.TrainingPartner.repository.MuscleGroupRepository;
 import com.fredrikkodar.TrainingPartner.repository.UserMaxWeightRepository;
 import com.fredrikkodar.TrainingPartner.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,10 +27,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import static org.mockito.ArgumentMatchers.any;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -40,6 +40,8 @@ class UserServiceTest {
     private ExerciseRepository exerciseRepository;
     @Mock
     private UserMaxWeightRepository userMaxWeightRepository;
+    @Mock
+    private MuscleGroupRepository muscleGroupRepository;
     @Mock
     private PasswordEncoder passwordEncoder;
     @InjectMocks
@@ -441,5 +443,29 @@ class UserServiceTest {
         assertEquals(0.9, userService.calculatePercentage(repsAndSets6));
         assertEquals(0.95, userService.calculatePercentage(repsAndSets7));
         assertThrows(IllegalArgumentException.class, () -> userService.calculatePercentage(repsAndSetsInvalid));
+    }
+    @Test
+    void getAllMuscleGroups() {
+        // Arrange
+        MuscleGroup muscleGroup1 = new MuscleGroup();
+        muscleGroup1.setMuscleGroupId(1L);
+        muscleGroup1.setName("Muscle Group 1");
+
+        MuscleGroup muscleGroup2 = new MuscleGroup();
+        muscleGroup2.setMuscleGroupId(2L);
+        muscleGroup2.setName("Muscle Group 2");
+
+        List<MuscleGroup> muscleGroups = Arrays.asList(muscleGroup1, muscleGroup2);
+        when(muscleGroupRepository.findAll()).thenReturn(muscleGroups);
+
+        // Act
+        List<MuscleGroupDTO> result = userService.getAllMuscleGroups();
+
+        // Assert
+        assertEquals(2, result.size());
+        assertEquals(muscleGroup1.getMuscleGroupId(), result.get(0).getMuscleGroupId());
+        assertEquals(muscleGroup1.getName(), result.get(0).getName());
+        assertEquals(muscleGroup2.getMuscleGroupId(), result.get(1).getMuscleGroupId());
+        assertEquals(muscleGroup2.getName(), result.get(1).getName());
     }
 }

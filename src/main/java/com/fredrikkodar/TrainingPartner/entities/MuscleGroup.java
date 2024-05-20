@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -21,9 +22,18 @@ public class MuscleGroup {
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "muscleGroups")
     private Set<Exercise> exercises;
 
-    public MuscleGroup(String name) {this.name = name;}
+    public MuscleGroup(String name) {
+        this.name = name;
+        this.exercises = new HashSet<>();
+    }
 
-    public MuscleGroup() {}
+    public MuscleGroup() {
+        this.exercises = new HashSet<>();
+    }
+
+    //public MuscleGroup(String name) {this.name = name;}
+
+    //public MuscleGroup() {}
 
     @Override
     public String toString() {

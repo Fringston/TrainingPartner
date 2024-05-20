@@ -67,11 +67,14 @@ class UserServiceTest {
         exerciseId = 1L;
         exercise = new Exercise();
         exercise.setExerciseId(exerciseId);
+        exercise.setName("Test Exercise");
         exercise.setPossibleMaxWeight(true);
 
         muscleGroup = new MuscleGroup();
         muscleGroup.setMuscleGroupId(1L);
+        muscleGroup.setName("Test Muscle Group");
         exercise.setMuscleGroups(Collections.singleton(muscleGroup));
+        muscleGroup.setExercises(Collections.singleton(exercise));
 
         userMaxWeight = new UserMaxWeight();
         userMaxWeight.setUser(user);
@@ -490,5 +493,31 @@ class UserServiceTest {
         assertEquals(exercise.getName(), resultExercise.getName());
         assertTrue(resultExercise.isPossibleMaxWeight());
         assertTrue(resultExercise.getMuscleGroupId().contains(muscleGroup.getMuscleGroupId()));
+    }
+    @Test
+    void convertToExerciseDTO() {
+        // Act
+        ExerciseDTO result = userService.convertToExerciseDTO(exercise);
+
+        // Assert
+        assertEquals(exercise.getExerciseId(), result.getExerciseId());
+        assertEquals(exercise.getName(), result.getName());
+        assertEquals(exercise.isPossibleMaxWeight(), result.isPossibleMaxWeight());
+        assertTrue(result.getMuscleGroupId().contains(muscleGroup.getMuscleGroupId()));
+    }
+    @Test
+    void convertToMuscleGroupDTO() {
+        // Act
+        MuscleGroupDTO result = userService.convertToMuscleGroupDTO(muscleGroup);
+
+        // Assert
+        assertEquals(muscleGroup.getMuscleGroupId(), result.getMuscleGroupId());
+        assertEquals(muscleGroup.getName(), result.getName());
+        assertEquals(1, result.getExercises().size());
+
+        ExerciseDTO resultExercise = result.getExercises().get(0);
+        assertEquals(exercise.getExerciseId(), resultExercise.getExerciseId());
+        assertEquals(exercise.getName(), resultExercise.getName());
+        assertEquals(exercise.isPossibleMaxWeight(), resultExercise.isPossibleMaxWeight());
     }
 }

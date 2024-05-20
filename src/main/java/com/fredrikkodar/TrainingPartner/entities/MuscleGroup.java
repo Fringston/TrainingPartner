@@ -31,10 +31,6 @@ public class MuscleGroup {
         this.exercises = new HashSet<>();
     }
 
-    //public MuscleGroup(String name) {this.name = name;}
-
-    //public MuscleGroup() {}
-
     @Override
     public String toString() {
         return "MuscleGroup{" +

@@ -477,7 +477,7 @@ class UserServiceTest {
         assertEquals(muscleGroup2.getMuscleGroupId(), result.get(1).getMuscleGroupId());
         assertEquals(muscleGroup2.getName(), result.get(1).getName());
     }
-    
+
     @Test
     void getExercisesWithPossibleMaxWeight() {
         // Act

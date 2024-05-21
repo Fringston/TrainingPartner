@@ -51,6 +51,18 @@ The API is documented with OpenAPI and the documentation can be accessed at `htt
 
 ---
 
+## Continuous Integration (CI)
+
+This project uses [GitHub Actions](https://github.com/features/actions) for Continuous Integration. 
+CI helps automate the process of building, testing, and deploying the application whenever there is a change to the source code.
+
+In this project, a workflow is triggered on every `push` event to the `main` and `dev` branches. 
+The workflow includes step s to set up JDK 17, build the project withMaven, and run tests.
+
+You can view the configuration for this workflow in the [`.github/workflows/maven.yml`](.github/workflows/maven.yml) file.
+
+---
+
 ## Credits
 
 I received help and inspiration from the following sources:

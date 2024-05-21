@@ -25,6 +25,7 @@ public class User implements UserDetails {
     @Column(unique = true)
     private String username;
     private String password;
+    private String email;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -37,10 +38,11 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<UserMaxWeight> maxWeights;
 
-    public User(Long id, String username, String encodedPassword, Set<Role> authorities) {
+    public User(Long id, String username, String encodedPassword, String email, Set<Role> authorities) {
         this.userId = id;
         this.username = username;
         this.password = encodedPassword;
+        this.email = email;
         this.authorities = authorities;
     }
 

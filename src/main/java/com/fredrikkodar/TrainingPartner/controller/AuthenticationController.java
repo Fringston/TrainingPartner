@@ -25,7 +25,7 @@ public class AuthenticationController {
     @PostMapping("/register")
     public ResponseEntity<User> registerUser(@RequestBody RegistrationDTO body) {
         try {
-            User user = authenticationService.registerUser(body.getUsername(), body.getPassword());
+            User user = authenticationService.registerUser(body.getUsername(), body.getPassword(), body.getEmail());
             return new ResponseEntity<>(user, HttpStatus.CREATED);
         } catch (UserAlreadyExistsException e) {
             return new ResponseEntity<>(null, HttpStatus.CONFLICT);

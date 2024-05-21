@@ -14,8 +14,10 @@ The API is documented with OpenAPI and the documentation can be accessed at `htt
 
 ## Installation
 
-1. Download and install MySQL and MySQL Workbench on your local machine.
-2. Clone this repository to your local machine.
+### Make sure you have the following installed on your local machine:
+- [Git](https://git-scm.com/)
+- [MySQL](https://www.mysql.com/)
+- An IDE, for example [IntelliJ IDEA](https://www.jetbrains.com/idea/)
 
 ---
 
@@ -28,9 +30,9 @@ The API is documented with OpenAPI and the documentation can be accessed at `htt
 - Ensure that the *schema name*, *username*, and *password* in the application.properties file match your MySQL setup.
 
 ### 2. Start the backend application:
-1. Open the project in your preferred IDE
-2. Run the project
-3. The API is now running on `http://localhost:8000`
+- Clone the [repository](https://github.com/Fringston/TrainingPartner) to your local machine
+- Open the project in your preferred IDE 
+- Run the project
 
 ### 3. Open and run the frontend application.
 

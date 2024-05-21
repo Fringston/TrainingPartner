@@ -37,7 +37,7 @@ public class AuthenticationService {
     private TokenService tokenService;
 
 
-   public User registerUser(String username, String password) {
+   public User registerUser(String username, String password, String email) {
        String passwordPattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$";
        Pattern pattern = Pattern.compile(passwordPattern);
        Matcher matcher = pattern.matcher(password);
@@ -50,12 +50,12 @@ public class AuthenticationService {
               throw new IllegalArgumentException("Password must contain at least one digit, one lowercase letter, one uppercase letter, one special character and be at least 8 characters long");
        }
        String encodedPassword = passwordEncoder.encode(password);
-       Role userRole = roleRepository.findByAuthority("USER").get();
 
+       Role userRole = roleRepository.findByAuthority("USER").get();
        Set<Role> authorities = new HashSet<>();
        authorities.add(userRole);
 
-       return userRepository.save(new User(0L, username, encodedPassword, authorities));
+       return userRepository.save(new User(0L, username, encodedPassword, email, authorities));
        }
 
     public LoginResponseDTO loginUser(String username, String password) {

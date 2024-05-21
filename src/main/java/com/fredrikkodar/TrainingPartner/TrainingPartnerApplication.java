@@ -36,7 +36,7 @@ public class TrainingPartnerApplication {
 
 			Set<Role> roles = new HashSet<>();
 			roles.add(adminRole);
-			User admin = new User(1L, "admin", passwordEncoder.encode("password"), roles);
+			User admin = new User(1L, "admin", passwordEncoder.encode("password"), "example@email.com", roles);
 
 			userRepository.save(admin);
 		};

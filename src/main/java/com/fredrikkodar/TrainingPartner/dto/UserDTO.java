@@ -10,5 +10,6 @@ public class UserDTO {
 
     private Long userId;
     private String username;
+    private String email;
     private Set<RoleDTO> roles;
 }

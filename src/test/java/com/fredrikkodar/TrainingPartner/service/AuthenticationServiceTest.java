@@ -26,19 +26,14 @@ import static org.mockito.Mockito.when;
 
         @InjectMocks
         private AuthenticationService authenticationService;
-
         @Mock
         private UserRepository userRepository;
-
         @Mock
         private RoleRepository roleRepository;
-
         @Mock
         private PasswordEncoder passwordEncoder;
-
         @Mock
         private AuthenticationManager authenticationManager;
-
         @Mock
         private TokenService tokenService;
 

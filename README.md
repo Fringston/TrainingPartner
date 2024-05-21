@@ -69,7 +69,7 @@ You can view the configuration for this workflow in the [`.github/workflows/mave
 ## Credits
 
 I received help and inspiration from the following sources:
-- **[Unknown Koder](https://www.youtube.com/watch?v=TeBt0Ike_Tk)** - Base for the authentication setup.
+- **[Unknown Koder](https://github.com/unknownkoder/spring-security-login-system)** - Base for the authentication setup.
 - **Github Copilot** - Facilitate troubleshooting and provide architectural suggestions.
 
 ---

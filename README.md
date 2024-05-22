@@ -11,6 +11,20 @@ The API is built with Spring Boot and uses Spring Security for authentication. I
 The API is documented with OpenAPI and the documentation can be accessed at `http://localhost:8000/swagger-ui.html`.
 
 ---
+## Tech Stack
+
+The following tools has been used in the building of this project:
+- Framework: Spring Boot
+- Database: MySQL
+- Object-Relational Mapping (ORM) Tool: Spring Data JPA
+- Authentication: Spring Security
+- Testing: JUnit and Mockito
+- Build Tool: Maven
+- Continuous Integration (CI): GitHub Actions
+- Documentation: OpenAPI
+- Other Tools: Project Lombok, Spring Boot DevTools, Spring Boot Starter OAuth2 Resource Server, Springdoc OpenAPI UI.
+
+---
 
 ## Installation
 
@@ -70,7 +84,7 @@ You can view the configuration for this workflow in the [`.github/workflows/mave
 
 I received help and inspiration from the following sources:
 - **[Unknown Koder](https://github.com/unknownkoder/spring-security-login-system)** - Base for the authentication setup.
-- **Github Copilot** - Facilitate troubleshooting and provide architectural suggestions.
+- **GitHub Copilot** - Facilitate troubleshooting and provide architectural suggestions.
 
 ---
 
